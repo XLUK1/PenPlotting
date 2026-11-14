@@ -147,12 +147,31 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-
 .toast.on{opacity:.95}
 .help{font-size:13px;color:var(--muted)}
 .help li{margin:3px 0}
+/* Pixel-/Kreuzstich-Modus */
+#grid.px .c{box-shadow:inset -1px -1px 0 var(--pl5);font-family:"Segoe UI Symbol","DejaVu Sans",Arial,sans-serif;color:var(--pc)}
+#grid.px .c.k10{border-left:1px solid #8a887f}
+#grid.px .gr.r10 .c{border-top:1px solid #8a887f}
+#grid.px.fill .c:not(.s){background:var(--pc);color:var(--pt)}
+#grid.px.nosym .c:not(.n){color:transparent}
+#grid.px .c.d{opacity:.3;background:transparent;color:var(--pc)}
+#grid.px.fill .c.d{background:var(--pc);color:var(--pt)}
+#grid.px .c.n{outline:3px solid #f2a516;opacity:1}
+body:not(.px) .m-px{display:none!important}
+#tab-tpl:not(.gpx) .t-px{display:none!important}
+#tab-tpl.gpx .t-cad{display:none!important}
+#tab-tpl.gpx .prog{flex-basis:100%}
+body.px .m-cad{display:none!important}
+.actions label.m-px{display:flex}
+.penrow .no{font-family:"Segoe UI Symbol","DejaVu Sans",Arial,sans-serif}
+body.px .penrow .no{font-size:15px;color:var(--ink);width:18px;text-align:center}
 #print{display:none}
 @media print{
   body>*:not(#print){display:none!important}
   html,body{background:#fff}
   #print{display:block}
   #print svg{display:block}
+  #print svg.pg{break-after:page;page-break-after:always}
+  #print svg.pg:last-child{break-after:auto;page-break-after:auto}
 }
 </style>
 </head>
@@ -184,7 +203,26 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-
      <input id="fileImg" type="file" accept="image/*" hidden>
    </div></details>
 
-   <details open><summary>Papier</summary><div class="body">
+   <details open><summary>Modus</summary><div class="body">
+     <div class="row"><label>Vorlage für</label><select data-k="mode" style="flex:1"><option value="cad">Cadliner – ASCII-Schrift</option><option value="pixel">Kreuzstich / Pixel-Raster</option></select></div>
+     <p class="hint m-cad">Bild wird in Buchstaben übersetzt, die der Cadliner schreibt.</p>
+     <p class="hint m-px">Bild wird in ein Raster mit einer Farbe pro Kästchen übersetzt – für Kreuzstich, Bügelperlen, Karopapier, Mosaik, Strickmuster usw. Jede Farbe bekommt ein Symbol.</p>
+   </div></details>
+
+   <details open class="m-px"><summary>Raster &amp; Stoff</summary><div class="body">
+     <div class="row"><label>Stoff / Raster</label><select data-k="fabric" id="fabricSel" style="flex:1"></select></div>
+     <div class="row"><label>Kästchengröße</label><input type="number" data-k="cellMm" step="0.05" min="0.5"><span class="unit">mm</span></div>
+     <div class="row"><label>Breite</label><input type="number" data-k="stW" step="1" min="4" max="500"><span class="unit">Kästchen</span></div>
+     <div class="row"><label>Höhe</label><input type="number" data-k="stH" step="1" min="4" max="800"><span class="unit">Kästchen</span><span class="unit" id="stHhint"></span></div>
+     <div class="row"><label>Stofffarbe</label><input type="color" data-k="fabricColor" style="width:44px;height:28px;padding:0 2px"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="skipFabric"> Hintergrund frei lassen</label></div>
+     <div class="row"><label></label><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="despeckle"> Einzelstiche entfernen (ruhigeres Muster)</label></div>
+     <div class="row"><label>Reihenfolge</label><select data-k="pxOrder" style="flex:1"><option value="rows">Farbe für Farbe (ganze Fläche)</option><option value="field">Block für Block, je Block alle Farben</option><option value="line">Zeile für Zeile, alle Farben (z. B. Perlen)</option></select></div>
+     <div class="row"><label>Blockgröße</label><input type="number" data-k="pxBlock" step="1" min="5" max="100"><span class="unit">Kästchen (nur „Block für Block“)</span></div>
+     <div class="row"><label>Stoffzugabe</label><input type="number" data-k="fabricMargin" step="0.5" min="0"><span class="unit">cm je Seite</span></div>
+     <p class="hint" id="pxHint"></p>
+   </div></details>
+
+   <details open class="m-cad"><summary>Papier</summary><div class="body">
      <div class="row"><label>Format</label>
        <select data-k="paper"><option>A5</option><option>A4</option><option>A3</option><option>A2</option><option>Letter</option><option value="custom">Benutzerdefiniert</option></select>
        <select data-k="orient"><option value="portrait">Hoch</option><option value="landscape">Quer</option></select></div>
@@ -193,7 +231,7 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-
      <div class="row"><label>Rand links/rechts</label><input type="number" data-k="mLeft" step="1" min="0"><input type="number" data-k="mRight" step="1" min="0"><span class="unit">mm</span></div>
    </div></details>
 
-   <details open><summary>Schrift (Cadliner)</summary><div class="body">
+   <details open class="m-cad"><summary>Schrift (Cadliner)</summary><div class="body">
      <div class="row"><label>Schrifthöhe</label><select id="hPreset"></select><input type="number" data-k="charH" step="0.1" min="1" max="25.4"><span class="unit">mm (1,0–25,4)</span></div>
      <div class="row"><label></label><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="linked"> wie am Gerät einstellen</label></div>
      <div id="devRow">
@@ -225,19 +263,21 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-
      <p class="hint">Doppelklick auf einen Regler setzt nur diesen zurück.</p>
    </div></details>
 
-   <details open><summary>Farben (Stifte)</summary><div class="body">
-     <div class="row"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="colorMode"> Mehrfarbig – mit Stiftwechsel</label></div>
+   <details open><summary id="penSum">Farben (Stifte)</summary><div class="body">
+     <div class="row m-cad"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="colorMode"> Mehrfarbig – mit Stiftwechsel</label></div>
+     <div class="row m-px"><label>Anzahl Farben</label><input type="number" data-k="nColors" step="1" min="2" max="40"><span class="unit">für den Vorschlag (2–40)</span></div>
      <div id="penBox">
        <div id="penList"></div>
        <p class="hint" id="pickHint" style="display:none;color:var(--accent)">💧 Pipette aktiv: oben ins Bild klicken, um die Farbe zu übernehmen (Klick daneben = abbrechen).</p>
        <div class="row"><select id="penAdd"></select><button id="bPenAuto" title="Ermittelt passende Farben aus dem Bild – danach an deine echten Stifte anpassen">Farben aus Bild vorschlagen</button></div>
-       <div class="row"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="keepBlack"> Schwarz beim Vorschlag immer als Stift 1</label></div>
-       <p class="hint">Trage die Farben deiner echten Stifte ein (Farbfeld anklicken). Die App wählt pro Feld die beste Kombination aus Stift <i>und</i> Zeichen – Mischtöne entstehen durch Nebeneinander, wie beim Druckraster. Die Zahl rechts zeigt, wie viele Zeichen der Stift schreibt.</p>
-       <p class="hint">Tipp: Innerhalb eines Geräte-Felds alle Farben nacheinander schreiben, ohne das Gerät zu verschieben – dann passen die Farben exakt übereinander. Neigung 90°, gleiche Stiftstärke.</p>
+       <div class="row m-cad"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="keepBlack"> Schwarz beim Vorschlag immer als Stift 1</label></div>
+       <p class="hint m-px">Name = Garn-Nummer eintragen (z. B. „DMC 310“), Farbe per Farbfeld oder 💧 Pipette an dein Garn anpassen. Das Symbol links steht später im Muster. Die Zahl rechts zeigt die Anzahl Stiche.</p>
+       <p class="hint m-cad">Trage die Farben deiner echten Stifte ein (Farbfeld anklicken). Die App wählt pro Feld die beste Kombination aus Stift <i>und</i> Zeichen – Mischtöne entstehen durch Nebeneinander, wie beim Druckraster. Die Zahl rechts zeigt, wie viele Zeichen der Stift schreibt.</p>
+       <p class="hint m-cad">Tipp: Innerhalb eines Geräte-Felds alle Farben nacheinander schreiben, ohne das Gerät zu verschieben – dann passen die Farben exakt übereinander. Neigung 90°, gleiche Stiftstärke.</p>
      </div>
    </div></details>
 
-   <details open><summary>Zeichensatz</summary><div class="body">
+   <details open class="m-cad"><summary>Zeichensatz</summary><div class="body">
      <p class="hint" style="margin-top:0">Nur Zeichen, die der Cadliner schreiben kann. Antippen = an/aus. Der Balken zeigt die Tinten-Dichte.</p>
      <div id="charGroups"></div>
      <div class="row"><label>Eigene Zeichen</label><input type="text" id="extraChars" placeholder="z. B. Ø±°" style="flex:1"></div>
@@ -257,7 +297,10 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-
    <div class="actions">
      <button class="primary" id="bCommit">Als Vorlage übernehmen →</button>
      <button id="bPrintDraft">1:1 drucken (Probe)</button>
-     <label style="display:flex;gap:6px;align-items:center;color:var(--muted)">Sek. pro Zeichen <input type="number" data-k="secPerChar" step="0.5" min="0.5"></label>
+     <label class="m-cad" style="display:flex;gap:6px;align-items:center;color:var(--muted)">Sek. pro Zeichen <input type="number" data-k="secPerChar" step="0.5" min="0.5"></label>
+     <label class="m-px" style="gap:6px;align-items:center;color:var(--muted)">Sek. pro Stich <input type="number" data-k="secPerStitch" step="0.5" min="0.5"></label>
+     <label class="m-px" style="gap:6px;align-items:center;color:var(--muted)">Druck: Kästchen <input type="number" data-k="printCell" step="0.1" min="1.5" max="10"> mm</label>
+     <label class="m-px" style="gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-k="printColor"> farbig drucken</label>
    </div>
    <p class="hint" id="commitHint"></p>
   </div>
@@ -269,7 +312,8 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-
   <div class="tbar">
     <div class="prog"><div class="bar"><b id="progBar"></b></div><div class="txt" id="progTxt"></div></div>
     <label>Zoom <input type="range" id="zoom" min="2" max="16" step="0.5" style="width:110px"></label>
-    <label><input type="checkbox" id="showDots"> Leerstellen als ·</label>
+    <label class="t-cad"><input type="checkbox" id="showDots"> Leerstellen als ·</label>
+    <label class="t-px">Darstellung <select id="pxShow"><option value="both">Farbe + Symbol</option><option value="sym">nur Symbole</option><option value="col">nur Farbe</option></select></label>
     <label id="penViewWrap">Zeigen <select id="penView"></select></label>
     <button id="bUndo" title="Rückgängig (Strg+Z)">↶ Rückgängig</button>
     <button id="bJump" title="Zum nächsten Zeichen scrollen">◎ Zum Nächsten</button>
@@ -313,6 +357,15 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-
     <li><b>Kursiv / Neigung</b> am Gerät auf 90° lassen, sonst passen die Spalten nicht mehr übereinander.</li>
     <li><b>Mehrfarbig:</b> Unter „Farben (Stifte)“ die echten Stiftfarben eintragen. Die Schreibleiste zeigt immer den aktiven Stift und meldet „Stift wechseln“. Mit „Zeigen: nur aktueller Stift“ blendet die Vorlage alle anderen Farben ab – so siehst du nur, was mit dem eingesetzten Stift noch zu tun ist. Beim Stiftwechsel das Gerät nicht verschieben; am besten erst alle Farben eines Felds, dann umsetzen.</li>
   </ul>
+  <h3 style="color:var(--ink)">Modus „Kreuzstich / Pixel-Raster“</h3>
+  <ul>
+    <li><b>Umschalten</b> unter „1 · Einrichten → Modus“. Der Modus gilt pro Projekt. Die Stiftliste des Cadliner-Modus bleibt erhalten.</li>
+    <li><b>Raster &amp; Stoff:</b> Stoff wählen (Aida, Leinen über 2 Fäden, Bügelperlen, Karopapier oder eigene Kästchengröße) und die Breite in Kästchen eintragen. Die Höhe folgt aus dem Bildformat („Ganzes Bild einpassen“). Bei „Fläche füllen“ oder „Verzerren“ gibst du sie selbst vor. Fertige Größe und Stoffzuschnitt stehen darunter.</li>
+    <li><b>Farben (Garne):</b> Anzahl wählen und „Farben aus Bild vorschlagen“ klicken. Danach Garn-Nummer als Namen eintragen (z. B. „DMC 310“) und die Farbe an dein Garn anpassen. Jede Farbe bekommt automatisch ein Symbol.</li>
+    <li><b>Hintergrund frei lassen:</b> Kästchen, die der Stofffarbe am nächsten sind, werden nicht gestickt. <b>Einzelstiche entfernen</b> ersetzt einzelne, isolierte Stiche durch die Farbe der Umgebung, damit weniger Farbwechsel entstehen. Für saubere Flächen Dithering auf „Keins“ stellen.</li>
+    <li><b>Abhaken:</b> wie im Cadliner-Modus. Die Schreibleiste zeigt Farbe, Symbol, Zeile/Spalte und wie viele Stiche derselben Farbe am Stück folgen. „Zeigen: nur aktuelle Farbe“ blendet alle anderen Farben ab.</li>
+    <li><b>Muster drucken:</b> A4-Seiten mit Symbolen, 10er-Linien und Nummerierung. Die letzte Seite enthält Übersicht und Legende mit Stichzahl je Farbe. Kästchengröße und Farbdruck stellst du unter dem Vorschaubild ein. <b>SVG</b> liefert das Pixelbild in Originalgröße, <b>TXT</b> das Symbolraster mit Legende.</li>
+  </ul>
   <p>Die Tinten-Dichte der Zeichen wird mit einer Arial-ähnlichen Strichschrift geschätzt. Am Cadliner sieht die Schrift etwas anders aus, das Verhältnis hell/dunkel bleibt aber ähnlich.</p>
   </div>
 </section>
@@ -344,7 +397,17 @@ const PEN_PRESETS = [
   {name:'Braun',color:'#7a4a22'},{name:'Orange',color:'#f07a12'},{name:'Violett',color:'#7a3aa8'},{name:'Gelb',color:'#f2c512'},
   {name:'Hellblau',color:'#3aa3e0'},{name:'Rosa',color:'#e36aa8'},{name:'Grau',color:'#8a8a8a'},
 ];
-const MAX_PENS = 8;
+const MAX_PENS = 8, MAX_YARNS = 40;
+/* Kreuzstich / Pixel: Stoffe und Raster (Kästchengröße in mm) */
+const FABRICS = {
+  aida11:{name:'Aida 11 ct (4,3 St./cm)',mm:25.4/11}, aida14:{name:'Aida 14 ct (5,5 St./cm)',mm:25.4/14},
+  aida16:{name:'Aida 16 ct (6,3 St./cm)',mm:25.4/16}, aida18:{name:'Aida 18 ct (7,1 St./cm)',mm:25.4/18},
+  lin28:{name:'Leinen 28 ct, über 2 Fäden',mm:25.4/14}, lin32:{name:'Leinen 32 ct, über 2 Fäden',mm:25.4/16},
+  perle:{name:'Bügelperlen (5 mm)',mm:5}, mini:{name:'Mini-Bügelperlen (2,6 mm)',mm:2.6},
+  karo5:{name:'Karopapier (5 mm)',mm:5}, custom:{name:'Benutzerdefiniert',mm:null},
+};
+/* je Farbe ein gut unterscheidbares Symbol (Reihenfolge = Farbnummer) */
+const SYMBOLS = ['×','●','○','■','□','▲','△','◆','◇','★','☆','♥','♣','♠','+','/','\\','=','#','%','@','&','?','<','>','~','^','$','A','B','C','D','E','F','G','H','K','M','N','S'];
 const PAPERS = {A5:[148,210],A4:[210,297],A3:[297,420],A2:[420,594],Letter:[216,279]};
 const DEFAULTS = {
   paper:'A4', orient:'portrait', pw:210, ph:297, mTop:15, mBottom:15, mLeft:20, mRight:15,
@@ -352,6 +415,8 @@ const DEFAULTS = {
   fieldW:185, fieldH:40, order:'field', colorMode:false, keepBlack:true,
   fit:'fit', scale:100, brightness:0, contrast:0.1, gamma:1, sharpen:0.4, bgCut:0.04,
   dither:'fs', autoLevels:true, invert:false, levels:40, secPerChar:4,
+  mode:'cad', fabric:'aida14', cellMm:25.4/14, stW:80, stH:100, fabricColor:'#ffffff', skipFabric:true, despeckle:true,
+  pxOrder:'rows', pxBlock:10, fabricMargin:5, nColors:12, secPerStitch:6, printCell:3, printColor:true,
 };
 const LS = 'cadascii:';
 
@@ -384,7 +449,7 @@ function newProject(name){
   return { id:uid(), name:name||('Bild '+new Date().toLocaleDateString('de-DE')), created:Date.now(), updated:Date.now(),
     image:null, settings:Object.assign({},DEFAULTS),
     chars: DEVICE.groups.filter(g=>g.on).map(g=>g.chars).join(''),
-    grid:null, done:'', log:{}, extra:'', pens:[{...PEN_PRESETS[0]},{...PEN_PRESETS[1]},{...PEN_PRESETS[2]}] };
+    grid:null, done:'', log:{}, extra:'', pens:[{...PEN_PRESETS[0]},{...PEN_PRESETS[1]},{...PEN_PRESETS[2]}], yarns:[] };
 }
 function index(){ return lsGet('index')||[]; }
 let saveTimer=null;
@@ -409,6 +474,7 @@ function openProject(p){
   proj.settings=Object.assign({},DEFAULTS,proj.settings||{});
   proj.log=proj.log||{}; proj.extra=proj.extra||'';
   if(!proj.pens||!proj.pens.length) proj.pens=[{...PEN_PRESETS[0]}];
+  proj.yarns=proj.yarns||[];
   $('#projName').value=proj.name;
   done = proj.grid ? unpackBits(proj.done, proj.grid.cols*proj.grid.rows) : null;
   img=null;
@@ -436,11 +502,30 @@ function syncInputs(){
   const cw=charW(s);
   $('#fontHint').textContent=`Zeichenbreite ≈ ${fmt(cw,2)} mm, Lücke ≈ ${fmt(Math.max(0,s.pitch-cw),2)} mm.`;
   $('#extraChars').value=proj.extra||'';
-  $('#penBox').style.display=s.colorMode?'':'none';
+  const px=s.mode==='pixel';
+  document.body.classList.toggle('px',px);
+  $('header h1').textContent = px ? 'Kreuzstich & Pixel' : 'Cadliner ASCII';
+  $('#penSum').textContent = px ? 'Farben (Garne)' : 'Farben (Stifte)';
+  $('#penBox').style.display=(s.colorMode||px)?'':'none';
+  $('#bPrintDraft').textContent = px ? 'Muster drucken (Probe)' : '1:1 drucken (Probe)';
+  const fs=$('#fabricSel'); if(!fs.options.length) fs.innerHTML=Object.entries(FABRICS).map(([k,f])=>`<option value="${k}">${f.name}</option>`).join('');
+  fs.value=s.fabric;
+  $('[data-k=cellMm]').disabled = s.fabric!=='custom'; $('[data-k=cellMm]').value=+cellMm(s).toFixed(2);
+  $('[data-k=stH]').disabled = s.fit==='fit';
+  $('[data-k=pxBlock]').disabled = s.pxOrder!=='field';
 }
+const isPx = () => proj && proj.settings.mode==='pixel';
+const curPal = () => isPx() ? proj.yarns : proj.pens;
+const cellMm = s => (FABRICS[s.fabric]&&FABRICS[s.fabric].mm) || s.cellMm || 2;
+const pc = (str,c) => str.charCodeAt(c)-48;      // Stift-/Farbindex aus Zeichenkette (0 = '0')
+const contrast = hex => { const [r,g,b]=hexRgb(hex); return lum(r,g,b)>0.45 ? '#000' : '#fff'; };
 const charW = s => Math.min(s.pitch, s.charH*s.baseW*s.widthPct/100);
 function applyRules(k){
   const s=proj.settings;
+  if(k==='fabric' && FABRICS[s.fabric] && FABRICS[s.fabric].mm) s.cellMm=FABRICS[s.fabric].mm;
+  if(k==='mode' && s.mode==='pixel' && !proj.pxInit){ Object.assign(s,PX_TONE); proj.pxInit=true; }
+  if(k==='mode' && s.mode==='pixel' && img && !proj.yarns.length) autoYarns(true);
+  if(k==='mode') buildPenList();
   if(k==='paper'||k==='orient'){ if(s.paper!=='custom'){ let [w,h]=PAPERS[s.paper]; if(s.orient==='landscape') [w,h]=[h,w]; s.pw=w; s.ph=h; } else if(k==='orient'){ if((s.orient==='landscape')!==(s.pw>s.ph)) [s.pw,s.ph]=[s.ph,s.pw]; } }
   if(s.linked && ['charH','linked','widthPct','letterSpace','baseW','lineRatio'].includes(k)){
     s.pitch=+(s.charH*(s.baseW*s.widthPct/100 + s.letterSpace/10)).toFixed(2);
@@ -462,36 +547,40 @@ document.addEventListener('input', e=>{
 });
 /* Tonwerte zurücksetzen */
 const TONE_KEYS=['brightness','contrast','gamma','sharpen','bgCut','dither','autoLevels','invert'];
-$('#bToneReset').onclick=()=>{ for(const k of TONE_KEYS) proj.settings[k]=DEFAULTS[k]; syncInputs(); recompute(); saveSoon(); toast('Tonwerte zurückgesetzt'); };
+/* Pixel-Modus: klare Farbflächen statt Raster – nicht schärfen, nicht rastern */
+const PX_TONE={contrast:0, sharpen:0, dither:'none', autoLevels:false};
+const toneDef=k=> isPx() && k in PX_TONE ? PX_TONE[k] : DEFAULTS[k];
+$('#bToneReset').onclick=()=>{ for(const k of TONE_KEYS) proj.settings[k]=toneDef(k); syncInputs(); recompute(); saveSoon(); toast('Tonwerte zurückgesetzt'); };
 document.addEventListener('dblclick',e=>{
   const el=e.target; if(el.type!=='range'||!el.dataset.k||!proj||!(el.dataset.k in DEFAULTS)) return;
-  proj.settings[el.dataset.k]=DEFAULTS[el.dataset.k]; syncInputs(); recompute(); saveSoon();
+  proj.settings[el.dataset.k]=toneDef(el.dataset.k); syncInputs(); recompute(); saveSoon();
 });
 $('#hPreset').onchange=e=>{ if(!e.target.value) return; proj.settings.charH=+e.target.value; applyRules('charH'); syncInputs(); recompute(); saveSoon(); };
 
 /* ================= Stifte ================= */
 const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function buildPenList(){
-  const box=$('#penList'); box.innerHTML='';
-  proj.pens.forEach((p,i)=>{
+  const box=$('#penList'); box.innerHTML=''; const P=curPal(), px=isPx(), MAX=px?MAX_YARNS:MAX_PENS;
+  P.forEach((p,i)=>{
     const row=document.createElement('div'); row.className='penrow'; row.dataset.i=i;
-    row.innerHTML=`<span class="no">${i+1}</span><input type="color" value="${escH(p.color)}" title="Stiftfarbe"><input type="text" value="${escH(p.name)}" placeholder="Name" title="Name des Stifts">`+
-      `<span class="cnt"></span><span><button data-a="pick" title="Farbe im Bild antippen (Pipette)" class="${pickPen===i?'primary':''}">💧</button> <button data-a="up" title="nach oben" ${i?'':'disabled'}>↑</button> <button data-a="del" title="entfernen" ${proj.pens.length>1?'':'disabled'}>×</button></span>`;
+    row.innerHTML=`<span class="no" title="${px?'Symbol im Muster':'Stift-Nr.'}">${escH(px?SYMBOLS[i]:i+1)}</span><input type="color" value="${escH(p.color)}" title="Farbe"><input type="text" value="${escH(p.name)}" placeholder="${px?'Garn-Nr. / Name':'Name'}" title="Name">`+
+      `<span class="cnt"></span><span><button data-a="pick" title="Farbe im Bild antippen (Pipette)" class="${pickPen===i?'primary':''}">💧</button> <button data-a="up" title="nach oben" ${i?'':'disabled'}>↑</button> <button data-a="del" title="entfernen" ${P.length>1?'':'disabled'}>×</button></span>`;
     box.appendChild(row);
   });
+  if(px && !P.length) box.innerHTML='<p class="hint">Noch keine Farben – Bild laden und „Farben aus Bild vorschlagen“ klicken.</p>';
   $('#drop').classList.toggle('picking', pickPen!=null);
   $('#pickHint').style.display = pickPen!=null ? '' : 'none';
   const add=$('#penAdd');
-  add.innerHTML='<option value="">+ Stift hinzufügen…</option>'+PEN_PRESETS.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('')+'<option value="custom">Eigene Farbe</option>';
-  add.disabled=proj.pens.length>=MAX_PENS;
+  add.innerHTML=`<option value="">+ ${px?'Farbe':'Stift'} hinzufügen…</option>`+PEN_PRESETS.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('')+'<option value="custom">Eigene Farbe</option>';
+  add.disabled=P.length>=MAX;
 }
 $('#penList').addEventListener('input',e=>{
-  const row=e.target.closest('.penrow'); if(!row) return; const p=proj.pens[+row.dataset.i];
+  const row=e.target.closest('.penrow'); if(!row) return; const p=curPal()[+row.dataset.i];
   if(e.target.type==='color'){ p.color=e.target.value; recompute(); } else p.name=e.target.value;
   saveSoon();
 });
 $('#penList').addEventListener('click',e=>{
-  const b=e.target.closest('button[data-a]'); if(!b) return; const i=+b.closest('.penrow').dataset.i;
+  const b=e.target.closest('button[data-a]'); if(!b) return; const i=+b.closest('.penrow').dataset.i, P=curPal();
   if(b.dataset.a==='pick'){
     if(!img) return toast('Erst ein Bild laden');
     pickPen = pickPen===i ? null : i; buildPenList();
@@ -499,8 +588,8 @@ $('#penList').addEventListener('click',e=>{
     return;
   }
   pickPen=null;
-  if(b.dataset.a==='del') proj.pens.splice(i,1);
-  if(b.dataset.a==='up'&&i>0) [proj.pens[i-1],proj.pens[i]]=[proj.pens[i],proj.pens[i-1]];
+  if(b.dataset.a==='del') P.splice(i,1);
+  if(b.dataset.a==='up'&&i>0) [P[i-1],P[i]]=[P[i],P[i-1]];
   buildPenList(); recompute(); saveSoon();
 });
 /* Pipette: Farbe an der angeklickten Bildstelle (7×7 px gemittelt) */
@@ -516,16 +605,23 @@ function pickColorAt(e){
   return '#'+s.map(v=>Math.round(v/49).toString(16).padStart(2,'0')).join('');
 }
 $('#penAdd').onchange=e=>{
-  const v=e.target.value; e.target.value=''; if(!v||proj.pens.length>=MAX_PENS) return;
-  proj.pens.push(v==='custom'? {name:'Stift '+(proj.pens.length+1),color:'#888888'} : {...PEN_PRESETS[+v]});
+  const v=e.target.value, P=curPal(); e.target.value=''; if(!v||P.length>=(isPx()?MAX_YARNS:MAX_PENS)) return;
+  P.push(v==='custom'? {name:(isPx()?'Farbe ':'Stift ')+(P.length+1),color:'#888888'} : {...PEN_PRESETS[+v]});
   buildPenList(); recompute(); saveSoon();
 };
+function autoYarns(quiet){
+  const sug=suggestYarns(proj.settings.nColors);
+  if(!sug) { if(!quiet) toast('Keine Farben gefunden'); return; }
+  proj.yarns=sug.map(c=>({name:nearestPresetName(c),color:c}));
+  if(!quiet) toast(`${sug.length} Farben vorgeschlagen – Namen/Garn-Nr. eintragen und Farben anpassen`);
+}
 $('#bPenAuto').onclick=()=>{
   if(!img) return toast('Erst ein Bild laden');
+  pickPen=null;
+  if(isPx()){ autoYarns(false); buildPenList(); recompute(); saveSoon(); return; }
   const sug=suggestPens(proj.pens.length, proj.settings.keepBlack);
   if(!sug) return toast('Im Bild ist kaum Farbe zu finden');
   if(sug.length<proj.pens.length) toast(`Nur ${sug.length} deutlich verschiedene Farben gefunden`);
-  pickPen=null;
   proj.pens=sug.map(c=>({name:nearestPresetName(c),color:c}));
   buildPenList(); recompute(); saveSoon(); toast('Farben vorgeschlagen – bitte an echte Stifte anpassen');
 };
@@ -597,7 +693,16 @@ function layout(s, im){
   // Schreibfeld des Geräts → Spalten/Zeilen pro Feld
   const fCols=Math.max(1,Math.floor((s.fieldW-cw)/s.pitch)+1), fRows=Math.max(1,Math.floor((s.fieldH-s.charH)/s.lineH)+1);
   return {aw,ah,cols,rows,cw,offX:Math.max(0,(aw-usedW)/2), offY:Math.max(0,(ah-usedH)/2), usedW, usedH,
-    fCols, fRows, nFx:Math.ceil(cols/fCols), nFy:Math.ceil(rows/fRows)};
+    fCols, fRows, nFx:Math.ceil(cols/fCols), nFy:Math.ceil(rows/fRows), px:s.pitch, py:s.lineH};
+}
+/* Kreuzstich / Pixel: quadratische Kästchen, Breite in Kästchen vorgegeben */
+function layoutPx(s, im){
+  const m=cellMm(s), cols=clamp(Math.round(s.stW)||80,4,500);
+  const rows = (im && s.fit==='fit') ? clamp(Math.round(cols*im.height/im.width),1,800) : clamp(Math.round(s.stH)||100,4,800);
+  const blk = s.pxOrder==='field' ? clamp(Math.round(s.pxBlock)||10,5,100) : 0;
+  const fCols=blk||cols, fRows=blk||rows;
+  return {cols,rows,cw:m,px:m,py:m,offX:0,offY:0,usedW:cols*m,usedH:rows*m,aw:cols*m,ah:rows*m,
+    fCols,fRows,nFx:Math.ceil(cols/fCols),nFy:Math.ceil(rows/fRows)};
 }
 function sampleRGB(im, s, L){ // mittlere Farbe je Zelle (0..1), unbearbeitet
   const {cols,rows}=L, k=4, W=cols*k, H=rows*k;
@@ -605,7 +710,7 @@ function sampleRGB(im, s, L){ // mittlere Farbe je Zelle (0..1), unbearbeitet
   const x=cv.getContext('2d',{willReadFrequently:true}); x.fillStyle='#fff'; x.fillRect(0,0,W,H);
   x.imageSmoothingEnabled=true; x.imageSmoothingQuality='high';
   let sx=0,sy=0,sw=im.width,sh=im.height;
-  if(s.fit==='fill'){ const g=(cols*s.pitch)/(rows*s.lineH), a=sw/sh; if(a>g){ sw=sh*g; sx=(im.width-sw)/2; } else { sh=sw/g; sy=(im.height-sh)/2; } }
+  if(s.fit==='fill'){ const g=(cols*L.px)/(rows*L.py), a=sw/sh; if(a>g){ sw=sh*g; sx=(im.width-sw)/2; } else { sh=sw/g; sy=(im.height-sh)/2; } }
   x.drawImage(im,sx,sy,sw,sh,0,0,W,H);
   const d=x.getImageData(0,0,W,H).data, R=new Float32Array(cols*rows*3);
   for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
@@ -753,6 +858,67 @@ function suggestPens(k, keepBlack){
              .filter(o=>o.n>0||o.black)
              .sort((a,b)=>(b.black-a.black)||(b.n-a.n)).map(o=>o.hex);
 }
+/* ---- Pixel-Modus: Farbabstand im Lab-Raum (wahrnehmungsnah) ---- */
+const lin=v=>v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4);
+function toLab(r,g,b){
+  r=lin(clamp(r,0,1)); g=lin(clamp(g,0,1)); b=lin(clamp(b,0,1));
+  const f=t=>t>0.008856?Math.cbrt(t):7.787*t+16/116;
+  const x=f((0.4124*r+0.3576*g+0.1805*b)/0.95047), y=f(0.2126*r+0.7152*g+0.0722*b), z=f((0.0193*r+0.1192*g+0.9505*b)/1.08883);
+  return [116*y-16, 500*(x-y), 200*(y-z)];
+}
+const d2=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2;
+/* je Kästchen die nächste Garnfarbe; −1 = Stoff bleibt frei */
+function mapPixel(C, cols, rows, yarns, s){
+  const cand=yarns.map((y,i)=>{ const rgb=hexRgb(y.color); return {i,rgb,lab:toLab(...rgb)}; });
+  if(s.skipFabric){ const rgb=hexRgb(s.fabricColor); cand.push({i:-1,rgb,lab:toLab(...rgb)}); }
+  const E=Float32Array.from(C), idx=new Int16Array(cols*rows);
+  const add=(r,c,er,eg,eb,f)=>{ if(r<rows&&c>=0&&c<cols){ const i=(r*cols+c)*3; E[i]+=er*f; E[i+1]+=eg*f; E[i+2]+=eb*f; } };
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+    const i=(r*cols+c)*3, t=[clamp(E[i],0,1),clamp(E[i+1],0,1),clamp(E[i+2],0,1)], L=toLab(...t);
+    let best=cand[0], bd=Infinity; for(const k of cand){ const dd=d2(k.lab,L); if(dd<bd){bd=dd;best=k;} }
+    idx[r*cols+c]=best.i;
+    if(s.dither!=='none'){ const er=t[0]-best.rgb[0], eg=t[1]-best.rgb[1], eb=t[2]-best.rgb[2];
+      if(s.dither==='fs'){ add(r,c+1,er,eg,eb,7/16); add(r+1,c-1,er,eg,eb,3/16); add(r+1,c,er,eg,eb,5/16); add(r+1,c+1,er,eg,eb,1/16); }
+      else for(const [dy,dx] of [[0,1],[0,2],[1,-1],[1,0],[1,1],[2,0]]) add(r+dy,c+dx,er,eg,eb,1/8); }
+  }
+  if(s.despeckle){ // Einzelstiche: kein gleichfarbiger Nachbar → häufigste Nachbarfarbe
+    const S=Int16Array.from(idx);
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      const v=S[r*cols+c], cnt=new Map(); let same=false;
+      for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){ if(!dx&&!dy) continue; const rr=r+dy, cc=c+dx; if(rr<0||cc<0||rr>=rows||cc>=cols) continue; const n=S[rr*cols+cc]; if(n===v){same=true;break;} cnt.set(n,(cnt.get(n)||0)+1); }
+      if(!same && cnt.size){ let bn=v, bc=0; cnt.forEach((k,n)=>{ if(k>bc){bc=k;bn=n;} }); idx[r*cols+c]=bn; }
+    }
+  }
+  const lines=new Array(rows), pens=new Array(rows);
+  for(let r=0;r<rows;r++){ let ln='', pl=''; for(let c=0;c<cols;c++){ const v=idx[r*cols+c]; ln+= v<0?' ':SYMBOLS[v]; pl+=String.fromCharCode(48+Math.max(0,v)); } lines[r]=ln; pens[r]=pl; }
+  return {lines,pens};
+}
+/* Farbvorschlag: k-Means (k-Means++-Start) im Lab-Raum; Stofffarbe wird ausgelassen */
+function suggestYarns(k){
+  if(!img) return null;
+  const s=proj.settings, L=layoutPx(s,img), C=sampleColor(img,s,L), n=C.length/3;
+  const fab=toLab(...hexRgb(s.fabricColor)), step=Math.max(1,Math.floor(n/6000)), pts=[];
+  for(let i=0;i<n;i+=step){ const l=toLab(C[i*3],C[i*3+1],C[i*3+2]); if(s.skipFabric && d2(l,fab)<36) continue; pts.push(l); }
+  if(!pts.length) return null;
+  k=clamp(Math.round(k)||8,1,MAX_YARNS);
+  let seed=12345; const rnd=()=>((seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff);
+  const cen=[pts[Math.floor(rnd()*pts.length)].slice()], dist=pts.map(p=>d2(p,cen[0]));
+  while(cen.length<k){ const tot=dist.reduce((a,b)=>a+b,0); if(tot<1e-6) break; let t=rnd()*tot, j=0; while(j<pts.length-1 && (t-=dist[j])>0) j++; cen.push(pts[j].slice()); pts.forEach((p,i)=>{ const d=d2(p,cen[cen.length-1]); if(d<dist[i]) dist[i]=d; }); }
+  const as=new Int32Array(pts.length);
+  for(let it=0;it<15;it++){
+    pts.forEach((p,i)=>{ let b=0,bd=Infinity; cen.forEach((c,j)=>{ const d=d2(p,c); if(d<bd){bd=d;b=j;} }); as[i]=b; });
+    const sum=cen.map(()=>[0,0,0,0]); pts.forEach((p,i)=>{ const q=sum[as[i]]; q[0]+=p[0]; q[1]+=p[1]; q[2]+=p[2]; q[3]++; });
+    sum.forEach((q,j)=>{ if(q[3]) cen[j]=[q[0]/q[3],q[1]/q[3],q[2]/q[3]]; });
+  }
+  const cnt=cen.map((_,j)=>as.reduce((a,v)=>a+(v===j),0));
+  const fromLab=([L0,a,b])=>{ const fy=(L0+16)/116, fx=fy+a/500, fz=fy-b/200, inv=t=>t**3>0.008856?t**3:(t-16/116)/7.787;
+    const x=inv(fx)*0.95047, y=inv(fy), z=inv(fz)*1.08883;
+    const rl=3.2406*x-1.5372*y-0.4986*z, gl=-0.9689*x+1.8758*y+0.0415*z, bl=0.0557*x-0.2040*y+1.0570*z;
+    const g=v=>{ v=clamp(v,0,1); return v<=0.0031308?12.92*v:1.055*Math.pow(v,1/2.4)-0.055; };
+    return '#'+[rl,gl,bl].map(v=>Math.round(g(v)*255).toString(16).padStart(2,'0')).join(''); };
+  const out=cen.map((c,j)=>({hex:fromLab(c),n:cnt[j]})).filter(o=>o.n>0).sort((a,b)=>b.n-a.n);
+  return [...new Set(out.map(o=>o.hex))];
+}
 function nearestPresetName(hex){
   const t=hexRgb(hex); let best=PEN_PRESETS[0], bd=Infinity;
   for(const p of PEN_PRESETS){ const c=hexRgb(p.color), dd=(c[0]-t[0])**2+(c[1]-t[1])**2+(c[2]-t[2])**2; if(dd<bd){bd=dd;best=p;} }
@@ -761,6 +927,7 @@ function nearestPresetName(hex){
 let rcTimer=null;
 function recompute(){ clearTimeout(rcTimer); rcTimer=setTimeout(recomputeNow,60); }
 function recomputeNow(){
+  if(isPx()) return recomputePx();
   const s=proj.settings, L=layout(s,img), pal=palette(proj.chars, s.levels);
   $('#palOut').textContent = pal.map(p=>p.c===' '?'␣':p.c).join('');
   let lines=null, pens=null;
@@ -772,7 +939,7 @@ function recomputeNow(){
   const used = lines ? new Set(lines.join('').replace(/ /g,'')).size : 0;
   // Zeichen je Stift
   const perPen=new Array(proj.pens.length).fill(0);
-  if(pens) lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++) if(ln[c]!==' ') perPen[+pens[r][c]]++; });
+  if(pens) lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++) if(ln[c]!==' ') perPen[pc(pens[r],c)]++; });
   $$('#penList .cnt').forEach((el,i)=>el.textContent= pens ? perPen[i].toLocaleString('de-DE') : '');
   const nChanges = pens ? penChanges(lines,pens,L.cols,L.rows,L.fCols,L.fRows,s.order) : 0;
   $('#stats').innerHTML = [
@@ -785,14 +952,41 @@ function recomputeNow(){
     [`${L.nFx} × ${L.nFy} = ${L.nFx*L.nFy}`,`Geräte-Felder (je ${L.fCols} Sp. × ${L.fRows} Z.)`],
     ...(pens? [[`${perPen.filter(n=>n).length} / ${nChanges}`,'Stifte benutzt / Stiftwechsel']] : []),
   ].map(([b,t])=>`<div class="stat"><b>${b}</b><span>${t}</span></div>`).join('');
+  finishRecompute(lines);
+}
+function finishRecompute(lines){
   $('#bCommit').disabled=!lines; $('#bPrintDraft').disabled=!lines;
   const prog = proj.grid && done ? done.reduce((a,b)=>a+b,0) : 0;
-  $('#commitHint').textContent = proj.grid ? (prog ? `Achtung: Es gibt schon eine Vorlage mit ${prog} abgehakten Zeichen. Übernehmen ersetzt sie.` : 'Es gibt schon eine Vorlage. Übernehmen ersetzt sie.') : '';
+  $('#commitHint').textContent = proj.grid ? (prog ? `Achtung: Es gibt schon eine Vorlage mit ${prog} abgehakten Feldern. Übernehmen ersetzt sie.` : 'Es gibt schon eine Vorlage. Übernehmen ersetzt sie.') : '';
   drawPreview();
+}
+function recomputePx(){
+  const s=proj.settings, L=layoutPx(s,img);
+  if(img && !proj.yarns.length){ autoYarns(true); buildPenList(); }
+  let lines=null, pens=null;
+  if(img && proj.yarns.length){ const C=sampleColor(img,s,L); ({lines,pens}=mapPixel(C,L.cols,L.rows,proj.yarns,s)); }
+  draft={L,lines,pens,px:true,penList: proj.yarns.map((p,i)=>({...p,sym:SYMBOLS[i]}))};
+  const per=new Array(proj.yarns.length).fill(0);
+  if(lines) lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++) if(ln[c]!==' ') per[pc(pens[r],c)]++; });
+  $$('#penList .cnt').forEach((el,i)=>el.textContent= lines ? per[i].toLocaleString('de-DE') : '');
+  const ink=per.reduce((a,b)=>a+b,0), cm=v=>fmt(v/10,1), fm=s.fabricMargin*20;
+  $('#stHhint').textContent = s.fit==='fit' ? `→ ${L.rows} (aus Bildformat)` : '';
+  $('#pxHint').textContent = `Kästchen ${fmt(L.px,2)} mm · fertige Größe ${cm(L.usedW)} × ${cm(L.usedH)} cm · Stoff zuschneiden ${cm(L.usedW+fm)} × ${cm(L.usedH+fm)} cm.`;
+  $('#stats').innerHTML = [
+    [`${L.cols} × ${L.rows}`,'Kästchen breit × hoch'],
+    [`${cm(L.usedW)} × ${cm(L.usedH)} cm`,'fertige Größe'],
+    [`${cm(L.usedW+fm)} × ${cm(L.usedH+fm)} cm`,'Stoff inkl. Zugabe'],
+    [lines? ink.toLocaleString('de-DE') : '–','Stiche / Kästchen'],
+    [lines? `${per.filter(n=>n).length} / ${proj.yarns.length}` : '–','Farben benutzt / definiert'],
+    [lines? '≈ '+hms(ink*s.secPerStitch) : '–','geschätzte Arbeitszeit'],
+    ...(L.nFx*L.nFy>1? [[`${L.nFx} × ${L.nFy}`,`Blöcke à ${L.fCols} × ${L.fRows}`]] : []),
+  ].map(([b,t])=>`<div class="stat"><b>${b}</b><span>${t}</span></div>`).join('');
+  finishRecompute(lines);
 }
 function drawPreview(){
   const cv=$('#prev'); if(!cv.offsetParent||!draft) return;
   const s=proj.settings, L=draft.L, dpr=window.devicePixelRatio||1;
+  if(draft.px) return drawPreviewPx(cv,s,L,dpr);
   const availW=Math.max(260, cv.parentElement.clientWidth), availH=Math.max(360, window.innerHeight-260);
   const sc=Math.min(availW/s.pw, availH/s.ph);
   const W=Math.round(s.pw*sc), H=Math.round(s.ph*sc);
@@ -809,7 +1003,21 @@ function drawPreview(){
   x.fillStyle='#1a1a1a'; x.font=`${s.charH/0.716}px Arial, Helvetica, sans-serif`; x.textAlign='center'; x.textBaseline='alphabetic';
   const x0=s.mLeft+L.offX+L.cw/2, y0=s.mTop+L.offY+s.charH;
   const cols = draft.penList ? draft.penList.map(p=>p.color) : null;
-  draft.lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++){ const ch=ln[c]; if(ch===' ') continue; if(cols) x.fillStyle=cols[+draft.pens[r][c]]; x.fillText(ch, x0+c*s.pitch, y0+r*s.lineH); } });
+  draft.lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++){ const ch=ln[c]; if(ch===' ') continue; if(cols) x.fillStyle=cols[pc(draft.pens[r],c)]; x.fillText(ch, x0+c*s.pitch, y0+r*s.lineH); } });
+}
+function drawPreviewPx(cv,s,L,dpr){
+  const availW=Math.max(260, cv.parentElement.clientWidth), availH=Math.max(360, window.innerHeight-260);
+  const m=L.px, sc=Math.min(availW/L.usedW, availH/L.usedH, 40/m);
+  const W=Math.round(L.usedW*sc), H=Math.round(L.usedH*sc);
+  cv.style.width=W+'px'; cv.style.height=H+'px'; cv.width=W*dpr; cv.height=H*dpr;
+  const x=cv.getContext('2d'); x.setTransform(dpr*sc,0,0,dpr*sc,0,0);
+  x.fillStyle=s.fabricColor; x.fillRect(0,0,L.usedW,L.usedH);
+  if(!draft.lines){ x.fillStyle='#999'; x.font=`${L.usedW/20}px system-ui`; x.textAlign='center'; x.fillText(img?'Farben festlegen':'Bild laden',L.usedW/2,L.usedH/2); return; }
+  const cols=draft.penList.map(p=>p.color);
+  draft.lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++){ if(ln[c]===' ') continue; x.fillStyle=cols[pc(draft.pens[r],c)]; x.fillRect(c*m,r*m,m*1.02,m*1.02); } });
+  if(m*sc>=4){ x.strokeStyle='rgba(0,0,0,.12)'; x.lineWidth=1/sc; x.beginPath(); for(let c=1;c<L.cols;c++){ x.moveTo(c*m,0); x.lineTo(c*m,L.usedH); } for(let r=1;r<L.rows;r++){ x.moveTo(0,r*m); x.lineTo(L.usedW,r*m); } x.stroke(); }
+  x.strokeStyle='rgba(0,0,0,.35)'; x.lineWidth=1/sc; x.beginPath();
+  for(let c=10;c<L.cols;c+=10){ x.moveTo(c*m,0); x.lineTo(c*m,L.usedH); } for(let r=10;r<L.rows;r+=10){ x.moveTo(0,r*m); x.lineTo(L.usedW,r*m); } x.stroke();
 }
 window.addEventListener('resize',()=>{ clearTimeout(drawPreview.t); drawPreview.t=setTimeout(drawPreview,120); });
 
@@ -831,7 +1039,7 @@ function loadImageFile(f){
 const drop=$('#drop');
 drop.onclick=e=>{
   if(pickPen!=null){
-    if(e.target.tagName==='IMG' && img){ const c=pickColorAt(e), p=proj.pens[pickPen]; p.color=c; if(!p.name||/^Stift \d/.test(p.name)||PEN_PRESETS.some(q=>q.name===p.name)) p.name=nearestPresetName(c); pickPen=null; buildPenList(); recompute(); saveSoon(); toast('Farbe übernommen: '+c); }
+    if(e.target.tagName==='IMG' && img){ const c=pickColorAt(e), p=curPal()[pickPen]; p.color=c; if(!p.name||/^(Stift|Farbe) \d/.test(p.name)||PEN_PRESETS.some(q=>q.name===p.name)) p.name=nearestPresetName(c); pickPen=null; buildPenList(); recompute(); saveSoon(); toast('Farbe übernommen: '+c); }
     else { pickPen=null; buildPenList(); }
     return;
   }
@@ -849,6 +1057,14 @@ $('#bCommit').onclick=()=>{
   const prog = proj.grid && done ? done.reduce((a,b)=>a+b,0) : 0;
   if(prog && !confirm(`Die bestehende Vorlage hat ${prog} abgehakte Zeichen. Wirklich ersetzen? Speichere vorher ggf. eine Datei.`)) return;
   const s=proj.settings, L=draft.L;
+  if(draft.px){
+    proj.grid={ mode:'pixel', cols:L.cols, rows:L.rows, lines:draft.lines.slice(), created:Date.now(),
+      pens:draft.pens.slice(), penList:draft.penList.map(p=>({...p})),
+      geo:{pw:L.usedW,ph:L.usedH,mLeft:0,mTop:0,offX:0,offY:0,cw:L.px,charH:L.px,pitch:L.px,lineH:L.px,
+           fCols:L.fCols,fRows:L.fRows,order:s.pxOrder,fabric:(FABRICS[s.fabric]||{}).name,fabricColor:s.fabricColor} };
+    done=new Uint8Array(L.cols*L.rows); undoStack=[];
+    saveNow(); buildGrid(); showTab('tpl'); toast('Muster übernommen'); return;
+  }
   proj.grid={ cols:L.cols, rows:L.rows, lines:draft.lines.slice(), created:Date.now(),
     pens: draft.pens? draft.pens.slice() : null, penList: draft.penList? draft.penList.map(p=>({...p})) : null,
     geo:{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH,
@@ -861,14 +1077,16 @@ $('#bCommit').onclick=()=>{
 /* ================= Vorlage / Abhaken ================= */
 let cells=[], rowEls=[], inkTotal=0, nextIdx=-1, anchor=null;
 const isInk=i=>proj.grid.lines[(i/proj.grid.cols)|0][i%proj.grid.cols]!==' ';
-const penAt=i=>{ const g=proj.grid; return g.pens? +g.pens[(i/g.cols)|0][i%g.cols] : 0; };
+const penAt=i=>{ const g=proj.grid; return g.pens? pc(g.pens[(i/g.cols)|0], i%g.cols) : 0; };
+const gPx=()=>!!(proj&&proj.grid&&proj.grid.mode==='pixel');
+const WD=()=>gPx()? {one:'Stich',many:'Stiche',pen:'Farbe',pens:'Farben'} : {one:'Zeichen',many:'Zeichen',pen:'Stift',pens:'Stifte'};
 const penList=()=>proj.grid.penList || [{name:'Stift',color:''}];
 const penSw=p=>p.color? `<span class="sw" style="background:${escH(p.color)}"></span>` : '';
 function applyZoom(){
   const g=proj&&proj.grid; if(!g) return;
-  const z=view.zoom, cw=g.geo.pitch*z, ch=g.geo.lineH*z;
+  const z=view.zoom, px=g.mode==='pixel', cw=px? z*2.5 : g.geo.pitch*z, ch=px? cw : g.geo.lineH*z;
   const el=$('#grid'); el.style.setProperty('--cw',cw+'px'); el.style.setProperty('--ch',ch+'px');
-  el.style.setProperty('--fs',Math.max(7,Math.min(cw*1.45,ch*0.92))+'px');
+  el.style.setProperty('--fs',(px? Math.max(6,cw*0.72) : Math.max(7,Math.min(cw*1.45,ch*0.92)))+'px');
 }
 function buildGrid(){
   const el=$('#grid'); el.innerHTML=''; cells=[]; rowEls=[];
@@ -878,6 +1096,9 @@ function buildGrid(){
   if(!g){ el.innerHTML='<div class="empty">Noch keine Vorlage. Unter „1 · Einrichten“ ein Bild laden und „Als Vorlage übernehmen“ klicken.</div>'; updateProgress(); return; }
   applyZoom();
   el.classList.toggle('colored', !!g.pens);
+  el.classList.toggle('px', g.mode==='pixel'); applyPxShow();
+  $('#tab-tpl').classList.toggle('gpx', g.mode==='pixel');
+  $('#bPrint').textContent = g.mode==='pixel' ? 'Muster drucken' : '1:1 drucken';
   const PL=penList();
   const frag=document.createDocumentFragment();
   const ru=document.createElement('div'); ru.className='ruler'; ru.innerHTML='<div class="rn"></div>';
@@ -893,7 +1114,8 @@ function buildGrid(){
     for(let c=0;c<g.cols;c++){
       const i=r*g.cols+c, ch=ln[c], s=document.createElement('div');
       s.className='c'+(c%10===0&&c?' k10':c%5===0&&c?' k5':'')+(c&&c%fC===0?' fb':'')+(ch===' '?' s':'')+(done[i]&&ch!==' '?' d':'');
-      if(g.pens && ch!==' ') s.style.color=PL[+g.pens[r][c]].color;
+      if(g.mode==='pixel' && ch!==' '){ const col=PL[pc(g.pens[r],c)].color; s.style.setProperty('--pc',col); s.style.setProperty('--pt',contrast(col)); }
+      else if(g.pens && ch!==' ') s.style.color=PL[pc(g.pens[r],c)].color;
       s.dataset.i=i; s.textContent= ch===' '?dot:ch; row.appendChild(s); cells[i]=s;
     }
     frag.appendChild(row); rowEls[r]=rn;
@@ -910,7 +1132,8 @@ function buildOrder(){
   const g=proj.grid, G=g.geo, fC=G.fCols||g.cols, fR=G.fRows||g.rows, nP=g.pens? penList().length : 1; order=[];
   const field=(fx,fy,p)=>{ for(let r=fy*fR;r<Math.min(g.rows,(fy+1)*fR);r++) for(let c=fx*fC;c<Math.min(g.cols,(fx+1)*fC);c++){ const i=r*g.cols+c; if(g.lines[r][c]!==' '&&penAt(i)===p) order.push(i); } };
   const nfx=Math.ceil(g.cols/fC), nfy=Math.ceil(g.rows/fR);
-  if(G.order==='rows'){ for(let p=0;p<nP;p++) for(let r=0;r<g.rows;r++) for(let c=0;c<g.cols;c++){ const i=r*g.cols+c; if(g.lines[r][c]!==' '&&penAt(i)===p) order.push(i); } }
+  if(G.order==='line'){ for(let r=0;r<g.rows;r++) for(let c=0;c<g.cols;c++){ if(g.lines[r][c]!==' ') order.push(r*g.cols+c); } }
+  else if(G.order==='rows'){ for(let p=0;p<nP;p++) for(let r=0;r<g.rows;r++) for(let c=0;c<g.cols;c++){ const i=r*g.cols+c; if(g.lines[r][c]!==' '&&penAt(i)===p) order.push(i); } }
   else if(G.order==='pen'){ for(let p=0;p<nP;p++) for(let fy=0;fy<nfy;fy++) for(let fx=0;fx<nfx;fx++) field(fx,fy,p); }
   else { for(let fy=0;fy<nfy;fy++) for(let fx=0;fx<nfx;fx++) for(let p=0;p<nP;p++) field(fx,fy,p); }
   orderPos=new Int32Array(g.cols*g.rows).fill(-1); order.forEach((i,p)=>orderPos[i]=p); lastField=null; lastPen=null;
@@ -920,37 +1143,49 @@ function fieldOf(r,c){ const G=proj.grid.geo, fC=G.fCols||proj.grid.cols, fR=G.f
 function updateNext(){
   if(nextIdx>=0&&cells[nextIdx]) cells[nextIdx].classList.remove('n');
   nextIdx=findNext();
-  const g=proj.grid;
-  if(nextIdx<0){ $('#nextChar').textContent='✓'; $('#nextChar').style.color=''; $('#nextInfo').innerHTML='<b>Fertig!</b> Alle Zeichen sind abgehakt.'; $('#strip').innerHTML=''; return; }
+  const g=proj.grid, px=g.mode==='pixel', w=WD(), nc=$('#nextChar');
+  nc.style.background=''; nc.style.color='';
+  if(nextIdx<0){ nc.textContent='✓'; $('#nextInfo').innerHTML=`<b>Fertig!</b> Alle ${w.many} sind abgehakt.`; $('#strip').innerHTML=''; return; }
   cells[nextIdx].classList.add('n');
   const r=(nextIdx/g.cols)|0, c=nextIdx%g.cols, ln=g.lines[r], G=g.geo, F=fieldOf(r,c);
   const PL=penList(), pen=penAt(nextIdx), P=PL[pen];
   const fc0=F.fx*F.fC, fr0=F.fy*F.fR;
-  // Leerschritte seit dem letzten Zeichen DESSELBEN Stifts in dieser Zeile (andere Farben werden übersprungen)
-  let gap=0; for(let k=c-1;k>=fc0;k--){ const i=r*g.cols+k; if(ln[k]!==' '&&penAt(i)===pen) break; gap++; }
-  const x=G.mLeft+G.offX+c*G.pitch, y=G.mTop+G.offY+G.charH+r*G.lineH;
-  const fx0=G.mLeft+G.offX+fc0*G.pitch, fy0=G.mTop+G.offY+fr0*G.lineH;
   const fieldNo=F.fy*F.nfx+F.fx+1, nF=F.nfx*F.nfy, fkey=F.fx+','+F.fy;
   const msg=[];
-  if(lastField!==null && lastField!==fkey) msg.push(`Gerät umsetzen → Feld ${fieldNo}`);
-  if(g.pens && lastPen!==null && lastPen!==pen) msg.push(`Stift wechseln → ${P.name}`);
+  if(lastField!==null && lastField!==fkey) msg.push(px? `Nächster Block ${fieldNo}` : `Gerät umsetzen → Feld ${fieldNo}`);
+  if(g.pens && lastPen!==null && lastPen!==pen && G.order!=='line') msg.push(`${w.pen} wechseln → ${P.name}`);
   if(msg.length) toast(msg.join(' · '));
   const penChanged = lastPen!==pen;
   lastField=fkey; lastPen=pen;
   if(penChanged && view.penView==='cur') applyPenView();
-  $('#nextChar').textContent=ln[c]; $('#nextChar').style.color=P.color||'';
-  $('#nextInfo').innerHTML=
-    (g.pens? `<span id="penNow">${penSw(P)} Stift ${pen+1}: ${escH(P.name)}</span> · ` : '')+
-    (nF>1? `<b>Feld ${fieldNo}/${nF}</b> (Start X ${fmt(fx0,1)} / Y ${fmt(fy0,1)} mm) · im Feld Zeile <b>${r-fr0+1}</b>, Spalte <b>${c-fc0+1}</b>` : '')+
-    ((g.pens||nF>1)? '<br>' : '')+
-    `Zeile <b>${r+1}</b>/${g.rows} · Spalte <b>${c+1}</b>/${g.cols} · `+
-    `X <b>${fmt(x,1)} mm</b> (linke Kante) · Y <b>${fmt(y,1)} mm</b> (Grundlinie) ab Papierecke oben links`+
-    (gap? ` · davor <b>${gap}× Leerschritt</b>` : c===fc0? ' · Zeilenanfang' : ' · direkt anschließend');
+  nc.textContent=ln[c];
+  if(px){ nc.style.background=P.color; nc.style.color=contrast(P.color); } else nc.style.color=P.color||'';
+  if(px){
+    // gleichfarbige, offene Kästchen am Stück ab hier (innerhalb des Blocks)
+    let run=0; for(let k=c;k<Math.min(g.cols,fc0+F.fC);k++){ const i=r*g.cols+k; if(ln[k]===' '||penAt(i)!==pen||done[i]) break; run++; }
+    $('#nextInfo').innerHTML=
+      `<span id="penNow">${penSw(P)} ${escH(P.sym||'')} Farbe ${pen+1}: ${escH(P.name)}</span>`+
+      (nF>1? ` · <b>Block ${fieldNo}/${nF}</b>` : '')+'<br>'+
+      `Zeile <b>${r+1}</b>/${g.rows} · Spalte <b>${c+1}</b>/${g.cols} · <b>${run}</b> ${run===1?'Stich':'Stiche'} am Stück`;
+  } else {
+    // Leerschritte seit dem letzten Zeichen DESSELBEN Stifts in dieser Zeile (andere Farben werden übersprungen)
+    let gap=0; for(let k=c-1;k>=fc0;k--){ const i=r*g.cols+k; if(ln[k]!==' '&&penAt(i)===pen) break; gap++; }
+    const x=G.mLeft+G.offX+c*G.pitch, y=G.mTop+G.offY+G.charH+r*G.lineH;
+    const fx0=G.mLeft+G.offX+fc0*G.pitch, fy0=G.mTop+G.offY+fr0*G.lineH;
+    $('#nextInfo').innerHTML=
+      (g.pens? `<span id="penNow">${penSw(P)} Stift ${pen+1}: ${escH(P.name)}</span> · ` : '')+
+      (nF>1? `<b>Feld ${fieldNo}/${nF}</b> (Start X ${fmt(fx0,1)} / Y ${fmt(fy0,1)} mm) · im Feld Zeile <b>${r-fr0+1}</b>, Spalte <b>${c-fc0+1}</b>` : '')+
+      ((g.pens||nF>1)? '<br>' : '')+
+      `Zeile <b>${r+1}</b>/${g.rows} · Spalte <b>${c+1}</b>/${g.cols} · `+
+      `X <b>${fmt(x,1)} mm</b> (linke Kante) · Y <b>${fmt(y,1)} mm</b> (Grundlinie) ab Papierecke oben links`+
+      (gap? ` · davor <b>${gap}× Leerschritt</b>` : c===fc0? ' · Zeilenanfang' : ' · direkt anschließend');
+  }
   const st=$('#strip'); st.innerHTML='';
   const k0=fc0, k1=Math.min(g.cols,fc0+F.fC);
   for(let k=k0;k<k1;k++){ const ch=ln[k], s=document.createElement('span'); const i=r*g.cols+k;
     if(ch===' '){ s.className='s'; s.textContent='·'; }
-    else { const op=g.pens&&penAt(i)!==pen; s.className = k===c?'n' : op? 'o' : done[i]?'d':''; s.textContent= op? '·' : ch; if(g.pens) s.style.color=PL[penAt(i)].color; }
+    else { const op=g.pens&&penAt(i)!==pen&&G.order!=='line'; s.className = k===c?'n' : op? 'o' : done[i]?'d':''; s.textContent= op? '·' : ch;
+      if(px){ const col=PL[penAt(i)].color; s.style.background=col; s.style.color=contrast(col); } else if(g.pens) s.style.color=PL[penAt(i)].color; }
     st.appendChild(s); }
   const cur=st.children[c-k0]; if(cur) st.scrollLeft = cur.offsetLeft - st.clientWidth/2;
 }
@@ -960,7 +1195,8 @@ function fillPenView(){
   $('#penViewWrap').style.display = g&&g.pens ? '' : 'none';
   if(!g||!g.pens) return;
   if(view.penView==null) view.penView='all';
-  sel.innerHTML='<option value="all">alle Stifte</option><option value="cur">nur aktueller Stift</option>'+penList().map((p,i)=>`<option value="${i}">nur ${i+1}: ${escH(p.name)}</option>`).join('');
+  const w=WD();
+  sel.innerHTML=`<option value="all">alle ${w.pens}</option><option value="cur">nur aktuelle ${w.pen}</option>`+penList().map((p,i)=>`<option value="${i}">nur ${p.sym? escH(p.sym)+' ' : (i+1)+': '}${escH(p.name)}</option>`).join('');
   if(![...sel.options].some(o=>o.value===String(view.penView))) view.penView='all';
   sel.value=String(view.penView);
 }
@@ -978,9 +1214,9 @@ function updateProgress(){
   let d=0; for(let i=0;i<done.length;i++) if(isInk(i)){ const p=penAt(i); tp[p]++; if(done[i]){ d++; dp[p]++; } }
   const pct=inkTotal? d/inkTotal*100 : 0;
   $('#progBar').style.width=pct+'%';
-  const t=proj.log[today()]||0, left=(inkTotal-d)*proj.settings.secPerChar;
-  let txt=`${d.toLocaleString('de-DE')} / ${inkTotal.toLocaleString('de-DE')} Zeichen (${fmt(pct,1)} %) · heute ${t} · noch ≈ ${hms(left)}`;
-  $('#progTxt').innerHTML=escH(txt) + (g.pens? '<br>'+PL.map((p,i)=>tp[i]? `${penSw(p)} ${escH(p.name)} ${dp[i]}/${tp[i]}` : '').filter(Boolean).join(' &nbsp; ') : '');
+  const px=g.mode==='pixel', t=proj.log[today()]||0, left=(inkTotal-d)*(px? proj.settings.secPerStitch : proj.settings.secPerChar);
+  let txt=`${d.toLocaleString('de-DE')} / ${inkTotal.toLocaleString('de-DE')} ${WD().many} (${fmt(pct,1)} %) · heute ${t} · noch ≈ ${hms(left)}`;
+  $('#progTxt').innerHTML=escH(txt) + (g.pens? '<br>'+PL.map((p,i)=>tp[i]? `${penSw(p)} ${p.sym? escH(p.sym)+' ':''}${escH(p.name)} ${dp[i]}/${tp[i]}` : '').filter(Boolean).join(' &nbsp; ') : '');
 }
 function setCells(list, val, record=true){
   const g=proj.grid, changed=[], rows=new Set(); let delta=0;
@@ -1003,7 +1239,8 @@ $('#grid').addEventListener('click',e=>{
 function markNext(){ if(nextIdx>=0){ setCells([nextIdx],1); scrollToNext(true); } }
 function markRow(){ // aktuelle Zeile im aktuellen Feld, nur der aktuelle Stift
   if(nextIdx<0) return; const g=proj.grid, r=(nextIdx/g.cols)|0, F=fieldOf(r,nextIdx%g.cols), pen=penAt(nextIdx), L=[];
-  for(let k=F.fx*F.fC;k<Math.min(g.cols,(F.fx+1)*F.fC);k++){ const i=r*g.cols+k; if(penAt(i)===pen) L.push(i); } setCells(L,1); scrollToNext(true); }
+  const all=g.geo.order==='line';
+  for(let k=F.fx*F.fC;k<Math.min(g.cols,(F.fx+1)*F.fC);k++){ const i=r*g.cols+k; if(all||penAt(i)===pen) L.push(i); } setCells(L,1); scrollToNext(true); }
 function undo(){ const u=undoStack.pop(); if(!u) return toast('Nichts rückgängig zu machen'); setCells(u.idx, u.val?0:1, false); scrollToNext(true); }
 function back(){ // letztes abgehaktes Zeichen (in Schreibreihenfolge) vor dem nächsten wieder öffnen
   let p=(nextIdx<0? order.length : orderPos[nextIdx])-1; while(p>=0 && !done[order[p]]) p--; if(p>=0){ setCells([order[p]],0); scrollToNext(true); } }
@@ -1023,6 +1260,8 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='Backspace'){ e.preventDefault(); back(); }
 });
 $('#zoom').oninput=e=>{ view.zoom=+e.target.value; lsSet('view',view); applyZoom(); };
+function applyPxShow(){ const el=$('#grid'), v=view.pxShow||'both'; $('#pxShow').value=v; el.classList.toggle('fill', v!=='sym'); el.classList.toggle('nosym', v==='col'); }
+$('#pxShow').onchange=e=>{ view.pxShow=e.target.value; lsSet('view',view); applyPxShow(); };
 $('#showDots').onchange=e=>{ view.dots=e.target.checked; lsSet('view',view); const g=proj.grid; if(!g) return; for(let i=0;i<cells.length;i++) if(!isInk(i)) cells[i].textContent=view.dots?'·':' '; };
 
 /* ================= Export / Druck ================= */
@@ -1048,23 +1287,95 @@ function printSvg(lines, G, pens, PL){
   $('#print').innerHTML=svgFor(lines,G,pens,PL);
   setTimeout(()=>window.print(),50);
 }
-$('#bPrint').onclick=()=>{ const g=proj.grid; if(g) printSvg(g.lines, g.geo, g.pens, g.penList); };
-$('#bPrintDraft').onclick=()=>{ if(!draft||!draft.lines) return; const s=proj.settings, L=draft.L; printSvg(draft.lines,{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH}, draft.pens, draft.penList); };
+/* ---- Pixel-Modus: Musterseiten (A4) mit Raster, Symbolen, Nummern und Legende ---- */
+function patternPages(lines, pens, PL, title, opt){
+  const rows=lines.length, cols=lines[0].length, cell=clamp(+opt.cell||3,1.5,10), color=!!opt.color;
+  const PW=210, PH=297, M=10, head=9, num=6;
+  let cpp=Math.floor((PW-2*M-num)/cell), rpp=Math.floor((PH-2*M-head-num)/cell);
+  if(cpp>10) cpp-=cpp%10; if(rpp>10) rpp-=rpp%10;
+  const nx=Math.ceil(cols/cpp), ny=Math.ceil(rows/rpp), nPages=nx*ny+1, out=[];
+  const esc=c=>String(c).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const svgOpen=`<svg class="pg" xmlns="http://www.w3.org/2000/svg" width="${PW}mm" height="${PH}mm" viewBox="0 0 ${PW} ${PH}" font-family="Segoe UI Symbol, DejaVu Sans, Arial, sans-serif">`;
+  const cnt=new Array(PL.length).fill(0);
+  lines.forEach((ln,r)=>{ for(let c=0;c<cols;c++) if(ln[c]!==' ') cnt[pc(pens[r],c)]++; });
+  let pg=0;
+  for(let py=0;py<ny;py++) for(let px=0;px<nx;px++){
+    pg++;
+    const c0=px*cpp, r0=py*rpp, c1=Math.min(cols,c0+cpp), r1=Math.min(rows,r0+rpp), x0=M+num, y0=M+head+num;
+    let t=svgOpen+`<text x="${M}" y="${M+5}" font-size="4.2" font-weight="bold">${esc(title)}</text>`+
+      `<text x="${PW-M}" y="${M+5}" font-size="3.2" text-anchor="end">Seite ${pg}/${nPages} · Spalten ${c0+1}–${c1} · Zeilen ${r0+1}–${r1}</text>`;
+    let cells='', syms='';
+    for(let r=r0;r<r1;r++) for(let c=c0;c<c1;c++){
+      const ch=lines[r][c]; if(ch===' ') continue; const p=PL[pc(pens[r],c)], x=x0+(c-c0)*cell, y=y0+(r-r0)*cell;
+      if(color) cells+=`<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${cell}" height="${cell}" fill="${p.color}"/>`;
+      syms+=`<text x="${(x+cell/2).toFixed(2)}" y="${(y+cell*0.78).toFixed(2)}"${color?` fill="${contrast(p.color)}"`:''}>${esc(ch)}</text>`;
+    }
+    t+=cells+`<g font-size="${(cell*0.78).toFixed(2)}" text-anchor="middle">${syms}</g>`;
+    const w=(c1-c0)*cell, h=(r1-r0)*cell; let thin='', thick='', nums='';
+    for(let c=c0;c<=c1;c++){ const x=(x0+(c-c0)*cell).toFixed(2), l=`M${x} ${y0}V${(y0+h).toFixed(2)}`; if(c%10===0||c===c1||c===c0) thick+=l; else thin+=l; if(c%10===0&&c<c1&&c>0||c===c0) nums+=`<text x="${x}" y="${y0-1.2}" font-size="2.6">${c+1}</text>`; }
+    for(let r=r0;r<=r1;r++){ const y=(y0+(r-r0)*cell).toFixed(2), l=`M${x0} ${y}H${(x0+w).toFixed(2)}`; if(r%10===0||r===r1||r===r0) thick+=l; else thin+=l; if(r%10===0&&r<r1&&r>0||r===r0) nums+=`<text x="${x0-1}" y="${(+y+2.4).toFixed(2)}" font-size="2.6" text-anchor="end">${r+1}</text>`; }
+    t+=`<path d="${thin}" stroke="#999" stroke-width="0.1" fill="none"/><path d="${thick}" stroke="#000" stroke-width="0.35" fill="none"/>${nums}</svg>`;
+    out.push(t);
+  }
+  // Legende + Übersicht
+  let t=svgOpen+`<text x="${M}" y="${M+5}" font-size="4.2" font-weight="bold">${esc(title)} – Legende</text>`+
+    `<text x="${PW-M}" y="${M+5}" font-size="3.2" text-anchor="end">Seite ${nPages}/${nPages}</text>`;
+  const info=[`${cols} × ${rows} Kästchen`, opt.fabric||'', opt.size||'', `${cnt.reduce((a,b)=>a+b,0).toLocaleString('de-DE')} Stiche`].filter(Boolean).join(' · ');
+  t+=`<text x="${M}" y="${M+12}" font-size="3.2">${esc(info)}</text>`;
+  const ow=PW-2*M, oh=95, os=Math.min(ow/cols, oh/rows), oy=M+17;
+  t+=`<rect x="${M}" y="${oy}" width="${(cols*os).toFixed(2)}" height="${(rows*os).toFixed(2)}" fill="${opt.fabricColor||'#fff'}" stroke="#000" stroke-width="0.2"/>`;
+  lines.forEach((ln,r)=>{ for(let c=0;c<cols;c++) if(ln[c]!==' ') t+=`<rect x="${(M+c*os).toFixed(2)}" y="${(oy+r*os).toFixed(2)}" width="${(os+0.02).toFixed(2)}" height="${(os+0.02).toFixed(2)}" fill="${PL[pc(pens[r],c)].color}"/>`; });
+  for(let px=1;px<nx;px++) t+=`<path d="M${(M+px*cpp*os).toFixed(2)} ${oy}v${(rows*os).toFixed(2)}" stroke="#d00" stroke-width="0.3" stroke-dasharray="1 1"/>`;
+  for(let py=1;py<ny;py++) t+=`<path d="M${M} ${(oy+py*rpp*os).toFixed(2)}h${(cols*os).toFixed(2)}" stroke="#d00" stroke-width="0.3" stroke-dasharray="1 1"/>`;
+  let ly=oy+rows*os+10; const used=PL.map((p,i)=>({p,i,n:cnt[i]})).filter(o=>o.n), colW=ow/2, perCol=Math.ceil(used.length/2), rh=Math.min(6.5,(PH-M-ly)/Math.max(1,perCol));
+  t+=`<g font-size="${Math.min(3.4,rh*0.6).toFixed(2)}">`;
+  used.forEach((o,k)=>{ const x=M+(k>=perCol?colW:0), y=ly+(k%perCol)*rh;
+    t+=`<rect x="${x}" y="${(y-rh*0.75).toFixed(2)}" width="${(rh*0.9).toFixed(2)}" height="${(rh*0.9).toFixed(2)}" fill="${color?o.p.color:'#fff'}" stroke="#000" stroke-width="0.15"/>`+
+       `<text x="${(x+rh*0.45).toFixed(2)}" y="${(y-rh*0.12).toFixed(2)}" text-anchor="middle"${color?` fill="${contrast(o.p.color)}"`:''}>${esc(o.p.sym||'')}</text>`+
+       `<rect x="${(x+rh*1.1).toFixed(2)}" y="${(y-rh*0.75).toFixed(2)}" width="${(rh*0.9).toFixed(2)}" height="${(rh*0.9).toFixed(2)}" fill="${o.p.color}" stroke="#000" stroke-width="0.15"/>`+
+       `<text x="${(x+rh*2.3).toFixed(2)}" y="${(y-rh*0.12).toFixed(2)}">${esc(o.p.name||('Farbe '+(o.i+1)))}  <tspan fill="#666">${o.p.color} · ${o.n.toLocaleString('de-DE')} St.</tspan></text>`; });
+  t+='</g></svg>'; out.push(t);
+  return out;
+}
+function printPattern(lines, pens, PL, L){
+  const s=proj.settings;
+  $('#pageStyle').textContent='@page{size:210mm 297mm;margin:0}';
+  $('#print').innerHTML=patternPages(lines, pens, PL, proj.name, {cell:s.printCell, color:s.printColor, fabric:(L.fabric||''), fabricColor:L.fabricColor,
+    size:`${fmt(L.w/10,1)} × ${fmt(L.h/10,1)} cm`}).join('');
+  setTimeout(()=>window.print(),80);
+}
+function pixelSvg(lines, pens, PL, m, bg){
+  const rows=lines.length, cols=lines[0].length, W=cols*m, H=rows*m;
+  let t='';
+  PL.forEach((p,pi)=>{ let d=''; lines.forEach((ln,r)=>{ for(let c=0;c<cols;c++){ if(ln[c]===' '||pc(pens[r],c)!==pi) continue; let e=c; while(e+1<cols&&ln[e+1]!==' '&&pc(pens[r],e+1)===pi) e++; d+=`M${(c*m).toFixed(3)} ${(r*m).toFixed(3)}h${((e-c+1)*m).toFixed(3)}v${m.toFixed(3)}h${(-(e-c+1)*m).toFixed(3)}z`; c=e; } });
+    if(d) t+=`<path id="farbe${pi+1}" data-name="${String(p.name).replace(/[&<>"]/g,'')}" fill="${p.color}" d="${d}"/>\n`; });
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W.toFixed(2)}mm" height="${H.toFixed(2)}mm" viewBox="0 0 ${W.toFixed(3)} ${H.toFixed(3)}" shape-rendering="crispEdges">\n<rect width="100%" height="100%" fill="${bg||'#fff'}"/>\n${t}</svg>`;
+}
+$('#bPrint').onclick=()=>{ const g=proj.grid; if(!g) return;
+  if(g.mode==='pixel') return printPattern(g.lines, g.pens, g.penList, {fabric:g.geo.fabric, fabricColor:g.geo.fabricColor, w:g.geo.pw, h:g.geo.ph});
+  printSvg(g.lines, g.geo, g.pens, g.penList); };
+$('#bPrintDraft').onclick=()=>{ if(!draft||!draft.lines) return; const s=proj.settings, L=draft.L;
+  if(draft.px) return printPattern(draft.lines, draft.pens, draft.penList, {fabric:(FABRICS[s.fabric]||{}).name, fabricColor:s.fabricColor, w:L.usedW, h:L.usedH}); printSvg(draft.lines,{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH}, draft.pens, draft.penList); };
 $('#bTxt').onclick=()=>{
   const g=proj.grid; if(!g) return;
   const trim=a=>a.map(l=>l.replace(/ +$/,'')).join('\r\n');
   let out;
+  if(g.mode==='pixel'){
+    const cnt=new Array(g.penList.length).fill(0); g.lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++) if(ln[c]!==' ') cnt[pc(g.pens[r],c)]++; });
+    out=trim(g.lines.map(l=>l.replace(/ /g,'.')))+'\r\n\r\nLegende (. = frei)\r\n'+g.penList.map((p,i)=>cnt[i]? `${p.sym}  ${p.name}  ${p.color}  ${cnt[i]} Stiche` : '').filter(Boolean).join('\r\n');
+    return download(safeName(proj.name)+'_Muster.txt', out, 'text/plain;charset=utf-8');
+  }
   if(!g.pens) out=trim(g.lines);
   else out=penList().map((p,pi)=>`===== Stift ${pi+1}: ${p.name} (${p.color}) =====\r\n`+trim(g.lines.map((ln,r)=>[...ln].map((ch,c)=>+g.pens[r][c]===pi?ch:' ').join('')))).join('\r\n\r\n');
   download(safeName(proj.name)+'_ASCII.txt', out, 'text/plain;charset=utf-8');
 };
-$('#bSvg').onclick=()=>{ const g=proj.grid; if(g) download(safeName(proj.name)+'_ASCII.svg', svgFor(g.lines, g.geo, g.pens, g.penList), 'image/svg+xml'); };
+$('#bSvg').onclick=()=>{ const g=proj.grid; if(g&&g.mode==='pixel') return download(safeName(proj.name)+'_Pixel.svg', pixelSvg(g.lines,g.pens,g.penList,g.geo.pitch,g.geo.fabricColor), 'image/svg+xml'); if(g) download(safeName(proj.name)+'_ASCII.svg', svgFor(g.lines, g.geo, g.pens, g.penList), 'image/svg+xml'); };
 
 /* ================= Datei speichern / laden ================= */
 async function saveFile(){
   if(!proj) return; saveNow();
   const data=JSON.stringify({app:'cadliner-ascii',version:1,saved:new Date().toISOString(),project:proj});
-  const name=safeName(proj.name)+'_Cadliner.json';
+  const name=safeName(proj.name)+(isPx()?'_Muster.json':'_Cadliner.json');
   if(window.showSaveFilePicker){
     try{
       if(!fileHandle) fileHandle=await window.showSaveFilePicker({suggestedName:name,types:[{description:'Cadliner-ASCII-Projekt',accept:{'application/json':['.json']}}]});

@@ -2,6 +2,8 @@
 
 Wandelt ein Bild in ASCII-Art um, die man mit dem Beschriftungsgerät **MAX Cadliner CD-750** Zeichen für Zeichen abschreibt – und hakt den Fortschritt über mehrere Tage ab.
 
+Zweiter Modus **„Kreuzstich / Pixel-Raster“**: dasselbe Bild als Farbraster mit Symbolen – für Kreuzstich, Bügelperlen, Karopapier, Mosaik oder Strickmuster.
+
 Eine einzelne HTML-Datei, ohne Installation und ohne Internet: [`Cadliner_ASCII.html`](Cadliner_ASCII.html) herunterladen und im Browser (Chrome/Edge/Firefox) öffnen.
 
 ## Funktionen
@@ -14,6 +16,15 @@ Eine einzelne HTML-Datei, ohne Installation und ohne Internet: [`Cadliner_ASCII.
 - **Abhaken:** Klick, Shift+Klick, ganze Zeile; Schreibleiste mit nächstem Zeichen, Position in mm und Leerschritten. Tastatur: Leertaste/Enter, Rücktaste, Strg+Enter, Strg+Z.
 - **Speichern:** automatisch im Browser, zusätzlich als `.json`-Projektdatei (Strg+S) zum Sichern und Weitergeben.
 - **Export:** 1:1-Druck, TXT (je Stift ein Abschnitt), SVG (eine Gruppe pro Stift – für Plotter).
+
+## Modus „Kreuzstich / Pixel-Raster“
+
+- **Raster & Stoff:** Aida 11/14/16/18 ct, Leinen 28/32 ct über 2 Fäden, Bügelperlen (5 / 2,6 mm), Karopapier oder eigene Kästchengröße. Breite in Kästchen, Höhe aus dem Bildformat; fertige Größe und Stoffzuschnitt (mit Zugabe) werden angezeigt.
+- **Garn-Palette:** 2–40 Farben, Vorschlag aus dem Bild (k-Means im Lab-Farbraum), Pipette, Name/Garn-Nummer frei (z. B. „DMC 310“). Jede Farbe bekommt ein eindeutiges Symbol.
+- **Saubere Muster:** Hintergrund (Stofffarbe) frei lassen, Einzelstiche entfernen, Dithering optional. Eigene Tonwert-Standards ohne Schärfen und Raster.
+- **Abhaken:** Farbe für Farbe, Block für Block oder Zeile für Zeile; Anzeige Farbe + Symbol, nur Symbole oder nur Farbe; Schreibleiste zeigt „n Stiche am Stück“; Fortschritt pro Farbe.
+- **Muster drucken:** A4-Seiten mit Symbolen, 10er-Linien und Spalten-/Zeilennummern, farbig oder schwarz-weiß, Kästchengröße einstellbar; letzte Seite mit Übersicht, Seitenaufteilung und Legende (Stiche je Farbe).
+- **Export:** SVG als Pixelbild in Originalgröße (ein Pfad pro Farbe), TXT als Symbolraster mit Legende.
 
 ## Hinweise zum CD-750
 
