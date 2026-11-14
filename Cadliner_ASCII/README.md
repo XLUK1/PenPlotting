@@ -21,6 +21,7 @@ Eine einzelne HTML-Datei, ohne Installation und ohne Internet: [`Cadliner_ASCII.
 
 - **Raster & Stoff:** Aida 11/14/16/18 ct, Leinen 28/32 ct über 2 Fäden, Bügelperlen (5 / 2,6 mm), Karopapier oder eigene Kästchengröße. Breite in Kästchen, Höhe aus dem Bildformat; fertige Größe und Stoffzuschnitt (mit Zugabe) werden angezeigt.
 - **Garn-Palette:** 2–40 Farben, Vorschlag aus dem Bild (k-Means im Lab-Farbraum), Pipette, Name/Garn-Nummer frei (z. B. „DMC 310“). Jede Farbe bekommt ein eindeutiges Symbol.
+- **DMC-Garne:** 489 DMC-Farben eingebaut (Mouliné, inkl. Blanc/Ecru/B5200 und 1–35). Vorschlag direkt als DMC-Garne ohne doppelte Nummern, DMC-Nummer eintippen übernimmt die Farbe, „Alle auf DMC runden“. Farbwerte aus [JuliaSzulc/flossverter](https://github.com/JuliaSzulc/flossverter) (abgeglichen mit einer zweiten Liste, DMC 699 korrigiert) – Bildschirm-Näherungen.
 - **Saubere Muster:** Hintergrund (Stofffarbe) frei lassen, Einzelstiche entfernen, Dithering optional. Eigene Tonwert-Standards ohne Schärfen und Raster.
 - **Abhaken:** Farbe für Farbe, Block für Block oder Zeile für Zeile; Anzeige Farbe + Symbol, nur Symbole oder nur Farbe; Schreibleiste zeigt „n Stiche am Stück“; Fortschritt pro Farbe.
 - **Muster drucken:** A4-Seiten mit Symbolen, 10er-Linien und Spalten-/Zeilennummern, farbig oder schwarz-weiß, Kästchengröße einstellbar; letzte Seite mit Übersicht, Seitenaufteilung und Legende (Stiche je Farbe).
