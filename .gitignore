@@ -1,0 +1,7 @@
+# lokale Claude-/Editor-Einstellungen
+.claude/
+.vscode/
+# gespeicherte Projektdateien und Exporte der App
+*_Cadliner.json
+*_ASCII.txt
+*_ASCII.svg

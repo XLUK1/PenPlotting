@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadliner ASCII</title>
+<style id="pageStyle">@page{size:210mm 297mm;margin:0}</style>
+<style>
+:root{
+  --bg:#f4f3ef; --panel:#ffffff; --ink:#1c1c1e; --muted:#6c6b70; --line:#e1dfd8;
+  --accent:#2f6fde; --accent-ink:#fff; --accent-soft:#e6eefc;
+  --done:#2e9d5b; --done-bg:#dff3e7; --next:#f2a516; --next-bg:#fff1d2;
+  --paper:#fffefa; --paper-ink:#1a1a1a; --pl5:#efeee9; --pl10:#d9d6cc; --pmuted:#8a887f; --pdone:#2e9d5b; --pdone-bg:#dcf1e4; --pnext-bg:#fff1d2;
+  --g5:#efeee9; --g10:#d9d6cc; --danger:#c8402f;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#17171a; --panel:#222226; --ink:#ececee; --muted:#9a9aa2; --line:#36363c;
+    --accent:#6b9cff; --accent-ink:#0d1220; --accent-soft:#25304a;
+    --done:#58c487; --done-bg:#1f3a2b; --next:#ffbf47; --next-bg:#4a3a14;
+    --paper:#f3f1ea;--g5:#303035; --g10:#46464d; --danger:#ff7a68;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17171a; --panel:#222226; --ink:#ececee; --muted:#9a9aa2; --line:#36363c;
+  --accent:#6b9cff; --accent-ink:#0d1220; --accent-soft:#25304a;
+  --done:#58c487; --done-bg:#1f3a2b; --next:#ffbf47; --next-bg:#4a3a14;
+  --paper:#f3f1ea;--g5:#303035; --g10:#46464d; --danger:#ff7a68;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 11px}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button.danger{color:var(--danger)}
+button:disabled{opacity:.45;cursor:default}
+input[type=number],input[type=text],select{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 7px;min-width:0}
+input[type=number]{width:78px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=checkbox]{accent-color:var(--accent)}
+header{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+header h1{font-size:16px;margin:0 8px 0 0;white-space:nowrap}
+header .grow{flex:1}
+#saveState{color:var(--muted);font-size:12px;white-space:nowrap}
+#projName{width:220px}
+nav.tabs{display:flex;gap:4px;padding:10px 16px 0}
+nav.tabs button{border-radius:8px 8px 0 0;border-bottom:none;padding:8px 16px}
+nav.tabs button.on{background:var(--panel);font-weight:600;border-color:var(--line);box-shadow:var(--shadow)}
+main{padding:0 16px 16px}
+.tab{display:none;background:var(--panel);border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:14px;box-shadow:var(--shadow)}
+.tab.on{display:block}
+/* setup */
+.setup{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:16px;align-items:start}
+@media (max-width:860px){.setup{grid-template-columns:1fr}}
+.ctrl details{border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:var(--panel)}
+.ctrl summary{padding:9px 12px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+.ctrl summary::after{content:"▾";color:var(--muted)}
+.ctrl details:not([open]) summary::after{content:"▸"}
+.ctrl .body{padding:2px 12px 12px}
+.row{display:flex;gap:8px;align-items:center;margin:7px 0;flex-wrap:wrap}
+.row label{color:var(--muted);min-width:110px}
+.row .unit{color:var(--muted);font-size:12px}
+.sl{display:grid;grid-template-columns:110px 1fr 44px;gap:8px;align-items:center;margin:6px 0}
+.sl span:first-child{color:var(--muted)}
+.sl output{text-align:right;font-variant-numeric:tabular-nums;font-size:12px}
+.hint{color:var(--muted);font-size:12px;margin:4px 0 0}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--muted);cursor:pointer}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop img{max-width:100%;max-height:160px;display:block;margin:0 auto 6px;border-radius:6px}
+.drop.picking{border-color:var(--accent);border-style:solid}
+.drop.picking img{max-height:none;cursor:crosshair}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}
+.chip{width:30px;height:38px;border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:3px 0 3px;font:15px Arial,Helvetica,sans-serif;cursor:pointer;user-select:none;background:var(--panel)}
+.chip i{display:block;width:20px;height:3px;border-radius:2px;background:var(--g10);overflow:hidden}
+.chip i b{display:block;height:100%;background:var(--ink)}
+.chip.off{opacity:.35;border-style:dashed}
+.chip.on{border-color:var(--accent);background:var(--accent-soft)}
+.grp{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.grp a{color:var(--accent);cursor:pointer;margin-left:8px}
+.pal{font:16px/1.2 Arial,Helvetica,sans-serif;letter-spacing:3px;background:var(--g5);padding:6px 8px;border-radius:6px;word-break:break-all;white-space:pre-wrap}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:10px}
+.stat{background:var(--g5);border-radius:8px;padding:8px 10px}
+.stat b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:12px}
+.prevwrap{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+#prev{background:var(--bg);border-radius:8px;max-width:100%}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+/* template */
+.tbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.prog{flex:1;min-width:200px}
+.prog .bar{height:10px;background:var(--g5);border-radius:6px;overflow:hidden}
+.prog .bar b{display:block;height:100%;background:var(--done);width:0;transition:width .2s}
+.prog .txt{font-size:12px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
+.tbar label{display:flex;gap:5px;align-items:center;font-size:13px;color:var(--muted);white-space:nowrap}
+#gridWrap{overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--paper);max-height:calc(100vh - 360px);min-height:240px;position:relative}
+#grid{display:inline-block;color:var(--paper-ink);font-family:Arial,Helvetica,sans-serif;user-select:none;padding-bottom:6px}
+.gr{display:flex;height:var(--ch)}
+.gr.r5 .c{border-top:1px solid var(--pl5)}
+.gr.r10 .c{border-top:1px solid var(--pl10)}
+.rn{position:sticky;left:0;z-index:2;width:42px;flex:none;text-align:right;padding-right:6px;font:11px/var(--ch) system-ui,sans-serif;color:var(--pmuted);background:var(--paper);cursor:pointer;border-right:1px solid var(--pl10)}
+.rn:hover{color:#2f6fde}
+.rn.full{color:var(--pdone);font-weight:700}
+.rn.full::before{content:"✓ "}
+.c{width:var(--cw);height:var(--ch);flex:none;display:flex;align-items:center;justify-content:center;font-size:var(--fs);line-height:1;cursor:pointer;box-sizing:border-box}
+.c.k10{border-left:1px solid var(--pl10)}
+.c.k5{border-left:1px solid var(--pl5)}
+.c.s{color:var(--pl10);cursor:default}
+.c.d{background:var(--pdone-bg);color:var(--pdone)}
+.colored .c.d{color:inherit;opacity:.45}
+.c.dim{opacity:.12}
+.c.d.dim{opacity:.08}
+.gr.fr .c{border-top:2px solid #2f6fde}
+.c.fb{border-left:2px solid #2f6fde}
+.c.n{background:var(--pnext-bg);outline:2px solid #f2a516;outline-offset:-2px;position:relative;z-index:1;opacity:1}
+.c:not(.s):hover{outline:1px solid #2f6fde;outline-offset:-1px}
+.ruler{display:flex;position:sticky;top:0;z-index:3;background:var(--paper);border-bottom:1px solid var(--pl10);height:18px}
+.ruler .rn{cursor:default;line-height:18px;background:var(--paper)}
+.ruler .rc{width:var(--cw);flex:none;font:10px/18px system-ui,sans-serif;color:var(--pmuted);text-align:left;overflow:visible;white-space:nowrap}
+.ruler .rc.k10{border-left:1px solid var(--pl10);padding-left:2px;color:var(--paper-ink)}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+#writer{position:sticky;bottom:0;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;box-shadow:var(--shadow)}
+@media (max-width:760px){#writer{grid-template-columns:1fr}}
+#nextChar{width:76px;height:76px;border-radius:10px;background:var(--pnext-bg);color:var(--paper-ink);border:2px solid #f2a516;display:flex;align-items:center;justify-content:center;font:52px/1 Arial,Helvetica,sans-serif}
+#penNow{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--ink)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.25);vertical-align:-2px}
+.penrow{display:grid;grid-template-columns:auto 38px 1fr auto auto;gap:6px;align-items:center;margin:5px 0}
+.penrow input[type=color]{width:38px;height:28px;padding:0 2px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.penrow .cnt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.penrow .no{font-size:12px;color:var(--muted);width:16px;text-align:right}
+#nextInfo{font-size:13px;color:var(--muted)}
+#nextInfo b{color:var(--ink);font-variant-numeric:tabular-nums}
+#strip{display:flex;gap:2px;overflow-x:auto;margin-top:6px;padding-bottom:3px;scroll-behavior:smooth}
+#strip span{flex:none;width:22px;height:30px;border-radius:4px;background:var(--paper);color:var(--paper-ink);display:flex;align-items:center;justify-content:center;font:18px Arial,Helvetica,sans-serif}
+#strip span.s{background:transparent;color:var(--g10)}
+#strip span.o{opacity:.18}
+#strip span.d{background:var(--pdone-bg);opacity:.5}
+#strip span.n{background:var(--pnext-bg);outline:2px solid #f2a516;opacity:1}
+.wbtn{display:flex;flex-direction:column;gap:6px}
+button.primary kbd{background:transparent;color:inherit;border-color:currentColor;opacity:.8}
+.wbtn button.primary{padding:10px 16px}
+kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px;background:var(--g5)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50}
+.toast.on{opacity:.95}
+.help{font-size:13px;color:var(--muted)}
+.help li{margin:3px 0}
+#print{display:none}
+@media print{
+  body>*:not(#print){display:none!important}
+  html,body{background:#fff}
+  #print{display:block}
+  #print svg{display:block}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Cadliner ASCII</h1>
+  <select id="projSel" title="Gespeicherte Projekte"></select>
+  <input id="projName" type="text" placeholder="Projektname" title="Projektname">
+  <button id="bNew" title="Neues Projekt">+ Neu</button>
+  <span class="grow"></span>
+  <span id="saveState"></span>
+  <button id="bSave" title="Projekt als Datei speichern (Strg+S)">💾 Datei speichern</button>
+  <button id="bLoad" title="Projektdatei laden">📂 Datei laden</button>
+  <button id="bDel" class="danger" title="Projekt aus dem Browser löschen">Löschen</button>
+  <input id="fileLoad" type="file" accept=".json,application/json" hidden>
+</header>
+<nav class="tabs">
+  <button data-tab="setup" class="on">1 · Einrichten</button>
+  <button data-tab="tpl">2 · Vorlage &amp; Abhaken</button>
+  <button data-tab="info">Hilfe</button>
+</nav>
+<main>
+<!-- ============ SETUP ============ -->
+<section class="tab on" id="tab-setup">
+ <div class="setup">
+  <div class="ctrl">
+   <details open><summary>Bild</summary><div class="body">
+     <div class="drop" id="drop"><div id="dropInner">Bild hierher ziehen oder klicken</div></div>
+     <input id="fileImg" type="file" accept="image/*" hidden>
+   </div></details>
+
+   <details open><summary>Papier</summary><div class="body">
+     <div class="row"><label>Format</label>
+       <select data-k="paper"><option>A5</option><option>A4</option><option>A3</option><option>A2</option><option>Letter</option><option value="custom">Benutzerdefiniert</option></select>
+       <select data-k="orient"><option value="portrait">Hoch</option><option value="landscape">Quer</option></select></div>
+     <div class="row"><label>Breite × Höhe</label><input type="number" data-k="pw" step="1" min="20"> × <input type="number" data-k="ph" step="1" min="20"><span class="unit">mm</span></div>
+     <div class="row"><label>Rand oben/unten</label><input type="number" data-k="mTop" step="1" min="0"><input type="number" data-k="mBottom" step="1" min="0"><span class="unit">mm</span></div>
+     <div class="row"><label>Rand links/rechts</label><input type="number" data-k="mLeft" step="1" min="0"><input type="number" data-k="mRight" step="1" min="0"><span class="unit">mm</span></div>
+   </div></details>
+
+   <details open><summary>Schrift (Cadliner)</summary><div class="body">
+     <div class="row"><label>Schrifthöhe</label><select id="hPreset"></select><input type="number" data-k="charH" step="0.1" min="1" max="25.4"><span class="unit">mm (1,0–25,4)</span></div>
+     <div class="row"><label></label><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="linked"> wie am Gerät einstellen</label></div>
+     <div id="devRow">
+       <div class="row"><label>Breite</label><input type="number" data-k="widthPct" step="1" min="50" max="200"><span class="unit">% (50–200)</span></div>
+       <div class="row"><label>Buchstabenabstand</label><input type="number" data-k="letterSpace" step="1" min="0" max="20"><span class="unit">/10 h (LETTER SPACE)</span></div>
+       <div class="row"><label>Zeilenabstand</label><input type="number" data-k="lineRatio" step="0.05" min="1"><span class="unit">× h (Grundlinie–Grundlinie)</span></div>
+       <div class="row"><label>Grundbreite</label><input type="number" data-k="baseW" step="0.01" min="0.3" max="1.2"><span class="unit">× h bei 100 % (Kalibrierung)</span></div>
+     </div>
+     <div class="row"><label>Zeichenabstand</label><input type="number" data-k="pitch" step="0.05" min="0.3"><span class="unit">mm (Mitte–Mitte)</span></div>
+     <div class="row"><label>Zeilenabstand</label><input type="number" data-k="lineH" step="0.05" min="0.3"><span class="unit">mm</span></div>
+     <p class="hint" id="fontHint"></p>
+     <p class="hint">Kalibrieren: am Cadliner 10× „H“ schreiben, Länge vom 1. bis 10. H (linke Kante bis linke Kante) messen, ÷ 9 = echter Zeichenabstand. Haken oben aus und den Wert direkt eintragen.</p>
+     <div class="row" style="margin-top:10px"><label>Schreibfeld Gerät</label><input type="number" data-k="fieldW" step="1" min="10"> × <input type="number" data-k="fieldH" step="1" min="5"><span class="unit">mm</span></div>
+     <div class="row"><label>Reihenfolge</label><select data-k="order"><option value="field">Feld für Feld (je Feld alle Stifte)</option><option value="pen">Stift für Stift (je Stift alle Felder)</option><option value="rows">Zeile für Zeile über ganze Breite</option></select></div>
+     <p class="hint">Der CD-750 schreibt pro Position max. 185 × 40 mm, danach muss das Gerät am Zeichenkopf umgesetzt werden. Die Felder werden in der Vorlage farbig abgegrenzt.</p>
+   </div></details>
+
+   <details open><summary>Bildgröße &amp; Tonwerte</summary><div class="body">
+     <div class="row"><label>Einpassen</label><select data-k="fit"><option value="fit">Ganzes Bild einpassen</option><option value="fill">Fläche füllen (beschneiden)</option><option value="stretch">Verzerren</option></select></div>
+     <div class="sl"><span>Bildgröße</span><input type="range" data-k="scale" min="10" max="100" step="1"><output data-o="scale"></output></div>
+     <div class="sl"><span>Helligkeit</span><input type="range" data-k="brightness" min="-0.5" max="0.5" step="0.01"><output data-o="brightness"></output></div>
+     <div class="sl"><span>Kontrast</span><input type="range" data-k="contrast" min="-0.9" max="0.9" step="0.01"><output data-o="contrast"></output></div>
+     <div class="sl"><span>Gamma</span><input type="range" data-k="gamma" min="0.3" max="3" step="0.05"><output data-o="gamma"></output></div>
+     <div class="sl"><span>Kanten schärfen</span><input type="range" data-k="sharpen" min="0" max="2" step="0.05"><output data-o="sharpen"></output></div>
+     <div class="sl"><span>Hintergrund weg</span><input type="range" data-k="bgCut" min="0" max="0.5" step="0.01"><output data-o="bgCut"></output></div>
+     <div class="row"><label>Dithering</label><select data-k="dither"><option value="none">Keins (sauber)</option><option value="fs">Floyd–Steinberg</option><option value="atk">Atkinson (weich)</option></select></div>
+     <div class="row"><label></label><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="autoLevels"> Autokontrast</label><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="invert"> Invertieren</label></div>
+     <div class="row"><label></label><button id="bToneReset" title="Helligkeit, Kontrast, Gamma, Schärfe, Hintergrund, Dithering, Autokontrast und Invertieren auf Standard">↺ Tonwerte zurücksetzen</button></div>
+     <p class="hint">Doppelklick auf einen Regler setzt nur diesen zurück.</p>
+   </div></details>
+
+   <details open><summary>Farben (Stifte)</summary><div class="body">
+     <div class="row"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="colorMode"> Mehrfarbig – mit Stiftwechsel</label></div>
+     <div id="penBox">
+       <div id="penList"></div>
+       <p class="hint" id="pickHint" style="display:none;color:var(--accent)">💧 Pipette aktiv: oben ins Bild klicken, um die Farbe zu übernehmen (Klick daneben = abbrechen).</p>
+       <div class="row"><select id="penAdd"></select><button id="bPenAuto" title="Ermittelt passende Farben aus dem Bild – danach an deine echten Stifte anpassen">Farben aus Bild vorschlagen</button></div>
+       <div class="row"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="keepBlack"> Schwarz beim Vorschlag immer als Stift 1</label></div>
+       <p class="hint">Trage die Farben deiner echten Stifte ein (Farbfeld anklicken). Die App wählt pro Feld die beste Kombination aus Stift <i>und</i> Zeichen – Mischtöne entstehen durch Nebeneinander, wie beim Druckraster. Die Zahl rechts zeigt, wie viele Zeichen der Stift schreibt.</p>
+       <p class="hint">Tipp: Innerhalb eines Geräte-Felds alle Farben nacheinander schreiben, ohne das Gerät zu verschieben – dann passen die Farben exakt übereinander. Neigung 90°, gleiche Stiftstärke.</p>
+     </div>
+   </div></details>
+
+   <details open><summary>Zeichensatz</summary><div class="body">
+     <p class="hint" style="margin-top:0">Nur Zeichen, die der Cadliner schreiben kann. Antippen = an/aus. Der Balken zeigt die Tinten-Dichte.</p>
+     <div id="charGroups"></div>
+     <div class="row"><label>Eigene Zeichen</label><input type="text" id="extraChars" placeholder="z. B. Ø±°" style="flex:1"></div>
+     <p class="hint">Die Symbole im gelben Tastenmodus (III) konnten nicht sicher ermittelt werden – hier eintragen, was deine Tastatur wirklich hat.</p>
+     <div class="sl"><span>Max. Zeichenarten</span><input type="range" data-k="levels" min="2" max="40" step="1"><output data-o="levels"></output></div>
+     <p class="hint">Weniger verschiedene Zeichen = einfacher und schneller abzuschreiben. Ganz rechts = alle ausgewählten.</p>
+     <div class="grp" style="margin-top:8px">Verwendete Palette (hell → dunkel)</div>
+     <div class="pal" id="palOut"></div>
+   </div></details>
+  </div>
+
+  <div>
+   <div class="stats" id="stats"></div>
+   <div class="prevwrap">
+     <canvas id="prev" width="600" height="800"></canvas>
+   </div>
+   <div class="actions">
+     <button class="primary" id="bCommit">Als Vorlage übernehmen →</button>
+     <button id="bPrintDraft">1:1 drucken (Probe)</button>
+     <label style="display:flex;gap:6px;align-items:center;color:var(--muted)">Sek. pro Zeichen <input type="number" data-k="secPerChar" step="0.5" min="0.5"></label>
+   </div>
+   <p class="hint" id="commitHint"></p>
+  </div>
+ </div>
+</section>
+
+<!-- ============ TEMPLATE ============ -->
+<section class="tab" id="tab-tpl">
+  <div class="tbar">
+    <div class="prog"><div class="bar"><b id="progBar"></b></div><div class="txt" id="progTxt"></div></div>
+    <label>Zoom <input type="range" id="zoom" min="2" max="16" step="0.5" style="width:110px"></label>
+    <label><input type="checkbox" id="showDots"> Leerstellen als ·</label>
+    <label id="penViewWrap">Zeigen <select id="penView"></select></label>
+    <button id="bUndo" title="Rückgängig (Strg+Z)">↶ Rückgängig</button>
+    <button id="bJump" title="Zum nächsten Zeichen scrollen">◎ Zum Nächsten</button>
+    <button id="bTxt">TXT</button>
+    <button id="bSvg">SVG</button>
+    <button id="bPrint">1:1 drucken</button>
+  </div>
+  <div id="gridWrap"><div id="grid"></div></div>
+  <div id="writer">
+    <div id="nextChar">–</div>
+    <div>
+      <div id="nextInfo"></div>
+      <div id="strip"></div>
+    </div>
+    <div class="wbtn">
+      <button class="primary" id="bNext" title="Leertaste / Enter">✓ Geschrieben <kbd>Leer</kbd></button>
+      <button id="bRow" title="Strg+Enter">Zeile fertig <kbd>Strg+↵</kbd></button>
+      <button id="bBack" title="Rücktaste">↶ Letztes <kbd>⌫</kbd></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HELP ============ -->
+<section class="tab" id="tab-info">
+  <div class="help">
+  <h3 style="color:var(--ink);margin-top:0">So geht's</h3>
+  <ol>
+    <li><b>Einrichten:</b> Bild laden, Papierformat und Ränder eintragen, dann Schrifthöhe, Zeichen- und Zeilenabstand so einstellen, wie du sie am Cadliner einstellst. Die Spalten- und Zeilenzahl rechnet die App selbst aus.</li>
+    <li><b>Zeichensatz:</b> Nur die Zeichen anlassen, die du schreiben willst. Weniger Zeichenarten = weniger Tastensuche.</li>
+    <li><b>Als Vorlage übernehmen</b> friert das Ergebnis ein. Ab dann änderst du nur noch den Fortschritt.</li>
+    <li><b>Abhaken:</b> Zeichen anklicken = erledigt/offen. <kbd>Shift</kbd>+Klick hakt alles bis zu dieser Stelle ab. Klick auf die Zeilennummer hakt die ganze Zeile ab.</li>
+    <li><b>Schreibleiste unten:</b> zeigt das nächste Zeichen, Zeile/Spalte und die Position in mm ab Papierkante. <kbd>Leer</kbd>/<kbd>Enter</kbd> = geschrieben, <kbd>⌫</kbd> = zurück, <kbd>Strg</kbd>+<kbd>Enter</kbd> = Zeile fertig, <kbd>Strg</kbd>+<kbd>Z</kbd> = rückgängig.</li>
+    <li><b>Speichern:</b> Alles wird automatisch im Browser gespeichert (gleicher Browser, gleiche Datei). Zur Sicherheit mit <b>💾 Datei speichern</b> (<kbd>Strg</kbd>+<kbd>S</kbd>) eine Projektdatei (.json) ablegen – die lässt sich jederzeit und auf jedem Rechner wieder laden.</li>
+    <li><b>1:1 drucken</b> erzeugt das Ergebnis in Originalgröße – als Probe oder als Unterlage. <b>SVG</b> ist für einen Plotter / eine spätere Automatisierung gedacht.</li>
+  </ol>
+  <h3 style="color:var(--ink)">Tipps für den CD-750</h3>
+  <ul>
+    <li><b>Schreibfeld 185 × 40 mm:</b> Pro Geräteposition passt nur ein Feld. Die blauen Linien zeigen, wo du das Gerät umsetzen musst. Bei „Feld für Feld“ führt dich die Schreibleiste durch ein Feld nach dem anderen und meldet, wann umgesetzt werden muss.</li>
+    <li><b>Monitor-Modus:</b> Laut Anleitung puffert das Gerät bis zu 200 Tastenanschläge. Du kannst eine Zeile also erst ins LCD tippen, prüfen und dann schreiben lassen. Danach in der App <kbd>Strg</kbd>+<kbd>Enter</kbd> drücken = Zeile fertig.</li>
+    <li><b>Kleinbuchstaben</b> sind Modus I, Großbuchstaben Modus II. Wer nicht ständig umschalten will, schaltet eine Gruppe im Zeichensatz einfach ab.</li>
+    <li><b>Kursiv / Neigung</b> am Gerät auf 90° lassen, sonst passen die Spalten nicht mehr übereinander.</li>
+    <li><b>Mehrfarbig:</b> Unter „Farben (Stifte)“ die echten Stiftfarben eintragen. Die Schreibleiste zeigt immer den aktiven Stift und meldet „Stift wechseln“. Mit „Zeigen: nur aktueller Stift“ blendet die Vorlage alle anderen Farben ab – so siehst du nur, was mit dem eingesetzten Stift noch zu tun ist. Beim Stiftwechsel das Gerät nicht verschieben; am besten erst alle Farben eines Felds, dann umsetzen.</li>
+  </ul>
+  <p>Die Tinten-Dichte der Zeichen wird mit einer Arial-ähnlichen Strichschrift geschätzt. Am Cadliner sieht die Schrift etwas anders aus, das Verhältnis hell/dunkel bleibt aber ähnlich.</p>
+  </div>
+</section>
+</main>
+
+<div id="print"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* ================= Gerät ================= */
+/* MAX CADLINER CD-750: Höhe 1,0–25,4 mm frei in 0,1-mm-Schritten, Breite 50–200 %,
+   Buchstabenabstand in 1/10 h, Schreibfeld 185 × 40 mm pro Position (Bedienungsanleitung S. 16–20, 37).
+   Modus I = Kleinbuchstaben, II = Großbuchstaben, III (gelb) = Symbole, IV (grün) = Linien/Rahmen. */
+const DEVICE = {
+  name: 'MAX Cadliner CD-750',
+  heights: [1.8, 2, 2.5, 3, 3.5, 5, 7, 10, 14],
+  groups: [
+    {id:'upper',   name:'Großbuchstaben (Modus II)',  chars:'ABCDEFGHIJKLMNOPQRSTUVWXYZ', on:true},
+    {id:'lower',   name:'Kleinbuchstaben (Modus I)', chars:'abcdefghijklmnopqrstuvwxyz', on:true},
+    {id:'digit',   name:'Ziffern',         chars:'0123456789', on:true},
+    {id:'punct',   name:'Satz- & Rechenzeichen', chars:'.,:;-+=/()\'"?!*', on:true},
+    {id:'special', name:'Symbole (Modus III – am Gerät prüfen)', chars:'#%&<>_@', on:false},
+  ],
+};
+let ALLCHARS = DEVICE.groups.map(g=>g.chars).join('');
+const PEN_PRESETS = [
+  {name:'Schwarz',color:'#1a1a1a'},{name:'Rot',color:'#d42a2a'},{name:'Blau',color:'#1f4fbf'},{name:'Grün',color:'#1d8a3c'},
+  {name:'Braun',color:'#7a4a22'},{name:'Orange',color:'#f07a12'},{name:'Violett',color:'#7a3aa8'},{name:'Gelb',color:'#f2c512'},
+  {name:'Hellblau',color:'#3aa3e0'},{name:'Rosa',color:'#e36aa8'},{name:'Grau',color:'#8a8a8a'},
+];
+const MAX_PENS = 8;
+const PAPERS = {A5:[148,210],A4:[210,297],A3:[297,420],A2:[420,594],Letter:[216,279]};
+const DEFAULTS = {
+  paper:'A4', orient:'portrait', pw:210, ph:297, mTop:15, mBottom:15, mLeft:20, mRight:15,
+  charH:2.5, pitch:2, lineH:4, linked:true, widthPct:100, letterSpace:2, baseW:0.6, lineRatio:1.6,
+  fieldW:185, fieldH:40, order:'field', colorMode:false, keepBlack:true,
+  fit:'fit', scale:100, brightness:0, contrast:0.1, gamma:1, sharpen:0.4, bgCut:0.04,
+  dither:'fs', autoLevels:true, invert:false, levels:40, secPerChar:4,
+};
+const LS = 'cadascii:';
+
+/* ================= Helfer ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v,a,b) => v<a?a:v>b?b:v;
+const fmt = (n,d=1) => Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+const today = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('on'),2200); }
+function lsGet(k){ try{ const v=localStorage.getItem(LS+k); return v?JSON.parse(v):null; }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(LS+k, JSON.stringify(v)); return true; }catch(e){ return false; } }
+function lsDel(k){ try{ localStorage.removeItem(LS+k); }catch(e){} }
+function packBits(u8){ const b=new Uint8Array(Math.ceil(u8.length/8)); for(let i=0;i<u8.length;i++) if(u8[i]) b[i>>3]|=1<<(i&7); let s=''; for(let i=0;i<b.length;i++) s+=String.fromCharCode(b[i]); return btoa(s); }
+function unpackBits(str,n){ const u=new Uint8Array(n); if(!str) return u; const s=atob(str); for(let i=0;i<n;i++) if(s.charCodeAt(i>>3)&(1<<(i&7))) u[i]=1; return u; }
+function hms(sec){ const h=Math.floor(sec/3600), m=Math.round((sec%3600)/60); return h? `${h} h ${m} min` : `${m} min`; }
+function safeName(s){ return (s||'Projekt').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ß/g,'ss').replace(/[^A-Za-z0-9_-]+/g,'_').replace(/^_+|_+$/g,'') || 'Projekt'; }
+
+/* ================= Zustand ================= */
+let proj = null;          // aktuelles Projekt
+let img = null;           // HTMLImageElement
+let draft = null;         // aktuelle Berechnung im Setup
+let done = null;          // Uint8Array Fortschritt
+let undoStack = [];
+let fileHandle = null;    // File System Access
+let view = Object.assign({zoom:6, dots:false}, lsGet('view')||{});
+
+function newProject(name){
+  return { id:uid(), name:name||('Bild '+new Date().toLocaleDateString('de-DE')), created:Date.now(), updated:Date.now(),
+    image:null, settings:Object.assign({},DEFAULTS),
+    chars: DEVICE.groups.filter(g=>g.on).map(g=>g.chars).join(''),
+    grid:null, done:'', log:{}, extra:'', pens:[{...PEN_PRESETS[0]},{...PEN_PRESETS[1]},{...PEN_PRESETS[2]}] };
+}
+function index(){ return lsGet('index')||[]; }
+let saveTimer=null;
+function saveSoon(){ clearTimeout(saveTimer); $('#saveState').textContent='…'; saveTimer=setTimeout(saveNow,400); }
+function saveNow(){
+  if(!proj) return;
+  proj.updated=Date.now();
+  if(done && proj.grid) proj.done=packBits(done);
+  const ok=lsSet('p:'+proj.id, proj);
+  const idx=index().filter(p=>p.id!==proj.id); idx.unshift({id:proj.id,name:proj.name,updated:proj.updated});
+  lsSet('index',idx); lsSet('last',proj.id);
+  $('#saveState').textContent = ok ? 'Im Browser gespeichert '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) : '⚠ Browser-Speicher voll – bitte Datei speichern';
+  if(!ok) $('#saveState').style.color='var(--danger)'; else $('#saveState').style.color='';
+  fillProjSel();
+}
+function fillProjSel(){
+  const sel=$('#projSel'); sel.innerHTML='';
+  for(const p of index()){ const o=document.createElement('option'); o.value=p.id; o.textContent=p.name; if(proj&&p.id===proj.id) o.selected=true; sel.appendChild(o); }
+}
+function openProject(p){
+  proj=p; fileHandle=null; undoStack=[];
+  proj.settings=Object.assign({},DEFAULTS,proj.settings||{});
+  proj.log=proj.log||{}; proj.extra=proj.extra||'';
+  if(!proj.pens||!proj.pens.length) proj.pens=[{...PEN_PRESETS[0]}];
+  $('#projName').value=proj.name;
+  done = proj.grid ? unpackBits(proj.done, proj.grid.cols*proj.grid.rows) : null;
+  img=null;
+  syncInputs(); buildCharGroups(); buildPenList();
+  if(proj.image){ const im=new Image(); im.onload=()=>{ img=im; showThumb(); recompute(); }; im.src=proj.image; } else { showThumb(); recompute(); }
+  buildGrid();
+  showTab(proj.grid ? 'tpl' : 'setup');
+  fillProjSel();
+}
+
+/* ================= Tabs ================= */
+function showTab(t){ $$('nav.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t)); $$('.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+t)); if(t==='setup') drawPreview(); if(t==='tpl') setTimeout(()=>scrollToNext(false),30); }
+$$('nav.tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+
+/* ================= Einstellungen ================= */
+function syncInputs(){
+  const s=proj.settings;
+  $$('[data-k]').forEach(el=>{ const k=el.dataset.k; if(!(k in s)) return; if(el.type==='checkbox') el.checked=!!s[k]; else el.value=s[k]; });
+  $$('[data-o]').forEach(o=>{ const k=o.dataset.o; let v=s[k]; o.textContent = k==='scale'? v+' %' : k==='levels' ? (v>=40?'alle':v) : fmt(v,2); });
+  const hp=$('#hPreset'); hp.innerHTML='<option value="">Stufe…</option>'+DEVICE.heights.map(h=>`<option value="${h}" ${h==s.charH?'selected':''}>${fmt(h,1)} mm</option>`).join('');
+  const custom = s.paper==='custom';
+  $('[data-k=pw]').disabled=!custom; $('[data-k=ph]').disabled=!custom;
+  $('[data-k=pitch]').disabled=s.linked; $('[data-k=lineH]').disabled=s.linked;
+  $('#devRow').style.display=s.linked?'':'none';
+  const cw=charW(s);
+  $('#fontHint').textContent=`Zeichenbreite ≈ ${fmt(cw,2)} mm, Lücke ≈ ${fmt(Math.max(0,s.pitch-cw),2)} mm.`;
+  $('#extraChars').value=proj.extra||'';
+  $('#penBox').style.display=s.colorMode?'':'none';
+}
+const charW = s => Math.min(s.pitch, s.charH*s.baseW*s.widthPct/100);
+function applyRules(k){
+  const s=proj.settings;
+  if(k==='paper'||k==='orient'){ if(s.paper!=='custom'){ let [w,h]=PAPERS[s.paper]; if(s.orient==='landscape') [w,h]=[h,w]; s.pw=w; s.ph=h; } else if(k==='orient'){ if((s.orient==='landscape')!==(s.pw>s.ph)) [s.pw,s.ph]=[s.ph,s.pw]; } }
+  if(s.linked && ['charH','linked','widthPct','letterSpace','baseW','lineRatio'].includes(k)){
+    s.pitch=+(s.charH*(s.baseW*s.widthPct/100 + s.letterSpace/10)).toFixed(2);
+    s.lineH=+(s.charH*s.lineRatio).toFixed(2);
+  }
+}
+$('#extraChars').addEventListener('input',e=>{
+  const v=[...new Set([...e.target.value].filter(c=>c.trim()))].join('');
+  const old=proj.extra||''; proj.extra=v;
+  proj.chars=[...proj.chars].filter(c=>!old.includes(c)||v.includes(c)||DEVICE.groups.some(g=>g.chars.includes(c))).join('');
+  for(const c of v) if(!old.includes(c)&&!proj.chars.includes(c)) proj.chars+=c;
+  buildCharGroups(); recompute(); saveSoon();
+});
+document.addEventListener('input', e=>{
+  const el=e.target; const k=el.dataset && el.dataset.k; if(!k||!proj) return;
+  const s=proj.settings;
+  if(el.type==='checkbox') s[k]=el.checked; else if(el.type==='number'||el.type==='range') { const v=parseFloat(el.value); if(isNaN(v)) return; s[k]=v; } else s[k]=el.value;
+  applyRules(k); syncInputs(); recompute(); saveSoon();
+});
+/* Tonwerte zurücksetzen */
+const TONE_KEYS=['brightness','contrast','gamma','sharpen','bgCut','dither','autoLevels','invert'];
+$('#bToneReset').onclick=()=>{ for(const k of TONE_KEYS) proj.settings[k]=DEFAULTS[k]; syncInputs(); recompute(); saveSoon(); toast('Tonwerte zurückgesetzt'); };
+document.addEventListener('dblclick',e=>{
+  const el=e.target; if(el.type!=='range'||!el.dataset.k||!proj||!(el.dataset.k in DEFAULTS)) return;
+  proj.settings[el.dataset.k]=DEFAULTS[el.dataset.k]; syncInputs(); recompute(); saveSoon();
+});
+$('#hPreset').onchange=e=>{ if(!e.target.value) return; proj.settings.charH=+e.target.value; applyRules('charH'); syncInputs(); recompute(); saveSoon(); };
+
+/* ================= Stifte ================= */
+const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function buildPenList(){
+  const box=$('#penList'); box.innerHTML='';
+  proj.pens.forEach((p,i)=>{
+    const row=document.createElement('div'); row.className='penrow'; row.dataset.i=i;
+    row.innerHTML=`<span class="no">${i+1}</span><input type="color" value="${escH(p.color)}" title="Stiftfarbe"><input type="text" value="${escH(p.name)}" placeholder="Name" title="Name des Stifts">`+
+      `<span class="cnt"></span><span><button data-a="pick" title="Farbe im Bild antippen (Pipette)" class="${pickPen===i?'primary':''}">💧</button> <button data-a="up" title="nach oben" ${i?'':'disabled'}>↑</button> <button data-a="del" title="entfernen" ${proj.pens.length>1?'':'disabled'}>×</button></span>`;
+    box.appendChild(row);
+  });
+  $('#drop').classList.toggle('picking', pickPen!=null);
+  $('#pickHint').style.display = pickPen!=null ? '' : 'none';
+  const add=$('#penAdd');
+  add.innerHTML='<option value="">+ Stift hinzufügen…</option>'+PEN_PRESETS.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('')+'<option value="custom">Eigene Farbe</option>';
+  add.disabled=proj.pens.length>=MAX_PENS;
+}
+$('#penList').addEventListener('input',e=>{
+  const row=e.target.closest('.penrow'); if(!row) return; const p=proj.pens[+row.dataset.i];
+  if(e.target.type==='color'){ p.color=e.target.value; recompute(); } else p.name=e.target.value;
+  saveSoon();
+});
+$('#penList').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-a]'); if(!b) return; const i=+b.closest('.penrow').dataset.i;
+  if(b.dataset.a==='pick'){
+    if(!img) return toast('Erst ein Bild laden');
+    pickPen = pickPen===i ? null : i; buildPenList();
+    if(pickPen!=null){ toast('Jetzt oben ins Bild klicken'); $('#drop').scrollIntoView({behavior:'smooth',block:'center'}); }
+    return;
+  }
+  pickPen=null;
+  if(b.dataset.a==='del') proj.pens.splice(i,1);
+  if(b.dataset.a==='up'&&i>0) [proj.pens[i-1],proj.pens[i]]=[proj.pens[i],proj.pens[i-1]];
+  buildPenList(); recompute(); saveSoon();
+});
+/* Pipette: Farbe an der angeklickten Bildstelle (7×7 px gemittelt) */
+let pickPen=null;
+function pickColorAt(e){
+  const im=e.target, r=im.getBoundingClientRect();
+  const fx=(e.clientX-r.left)/r.width, fy=(e.clientY-r.top)/r.height;
+  const cv=pickColorAt.cv||(pickColorAt.cv=document.createElement('canvas'));
+  if(cv.dataset.src!==proj.image){ cv.width=img.width; cv.height=img.height; cv.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0); cv.dataset.src=proj.image; }
+  const x=clamp(Math.round(fx*img.width)-3,0,img.width-7), y=clamp(Math.round(fy*img.height)-3,0,img.height-7);
+  const d=cv.getContext('2d',{willReadFrequently:true}).getImageData(x,y,7,7).data; const s=[0,0,0];
+  for(let i=0;i<d.length;i+=4){ s[0]+=d[i]; s[1]+=d[i+1]; s[2]+=d[i+2]; }
+  return '#'+s.map(v=>Math.round(v/49).toString(16).padStart(2,'0')).join('');
+}
+$('#penAdd').onchange=e=>{
+  const v=e.target.value; e.target.value=''; if(!v||proj.pens.length>=MAX_PENS) return;
+  proj.pens.push(v==='custom'? {name:'Stift '+(proj.pens.length+1),color:'#888888'} : {...PEN_PRESETS[+v]});
+  buildPenList(); recompute(); saveSoon();
+};
+$('#bPenAuto').onclick=()=>{
+  if(!img) return toast('Erst ein Bild laden');
+  const sug=suggestPens(proj.pens.length, proj.settings.keepBlack);
+  if(!sug) return toast('Im Bild ist kaum Farbe zu finden');
+  if(sug.length<proj.pens.length) toast(`Nur ${sug.length} deutlich verschiedene Farben gefunden`);
+  pickPen=null;
+  proj.pens=sug.map(c=>({name:nearestPresetName(c),color:c}));
+  buildPenList(); recompute(); saveSoon(); toast('Farben vorgeschlagen – bitte an echte Stifte anpassen');
+};
+
+/* ================= Zeichensatz ================= */
+const covCache=new Map();
+function coverage(ch){
+  if(ch===' ') return 0;
+  if(covCache.has(ch)) return covCache.get(ch);
+  const cv=coverage.cv||(coverage.cv=Object.assign(document.createElement('canvas'),{width:100,height:100}));
+  const x=cv.getContext('2d',{willReadFrequently:true});
+  x.clearRect(0,0,100,100);
+  const S=64; x.font=`${S}px Arial, Helvetica, sans-serif`; x.textAlign='center'; x.textBaseline='alphabetic';
+  x.fillStyle='#000'; x.strokeStyle='#000'; x.lineJoin='round'; x.lineCap='round'; x.lineWidth=S*0.716*0.08;
+  x.fillText(ch,50,76); x.strokeText(ch,50,76);
+  const d=x.getImageData(0,0,100,100).data; let s=0; for(let i=3;i<d.length;i+=4) s+=d[i];
+  s/=255; covCache.set(ch,s); return s;
+}
+const maxCov=()=>Math.max(...[...ALLCHARS].map(coverage));
+function allGroups(){
+  const base=DEVICE.groups.map(g=>g.chars).join('');
+  const ex=[...(proj.extra||'')].filter(c=>!base.includes(c)).join('');
+  ALLCHARS=base+ex;
+  return ex ? [...DEVICE.groups,{id:'extra',name:'Eigene Zeichen',chars:ex}] : DEVICE.groups;
+}
+function buildCharGroups(){
+  const box=$('#charGroups'); box.innerHTML=''; const groups=allGroups(); const mc=maxCov();
+  for(const g of groups){
+    const head=document.createElement('div'); head.className='grp';
+    head.innerHTML=`<span>${g.name}</span><span><a data-g="${g.id}" data-a="1">alle</a><a data-g="${g.id}" data-a="0">keine</a></span>`;
+    box.appendChild(head);
+    const wrap=document.createElement('div'); wrap.className='chips';
+    for(const ch of g.chars){ const c=document.createElement('div'); c.className='chip '+(proj.chars.includes(ch)?'on':'off'); c.dataset.ch=ch; c.title=`Dichte ${Math.round(coverage(ch)/mc*100)} %`; c.innerHTML=`<span></span><i><b style="width:${Math.round(coverage(ch)/mc*100)}%"></b></i>`; c.firstChild.textContent=ch; wrap.appendChild(c); }
+    box.appendChild(wrap);
+  }
+}
+$('#charGroups').addEventListener('click',e=>{
+  const chip=e.target.closest('.chip'); const a=e.target.closest('a[data-g]');
+  if(chip){ const ch=chip.dataset.ch; proj.chars = proj.chars.includes(ch) ? proj.chars.split(ch).join('') : proj.chars+ch; }
+  else if(a){ const g=allGroups().find(x=>x.id===a.dataset.g); let s=[...proj.chars].filter(c=>!g.chars.includes(c)).join(''); if(a.dataset.a==='1') s+=g.chars; proj.chars=s; }
+  else return;
+  buildCharGroups(); recompute(); saveSoon();
+});
+function palette(chars, levels){
+  let list=[...new Set([...chars].filter(c=>c!==' '))].map(c=>({c,v:coverage(c)}));
+  if(!list.length) return [{c:' ',v:0}];
+  const mx=Math.max(...list.map(o=>o.v)); list.forEach(o=>o.v/=mx); list.sort((a,b)=>a.v-b.v);
+  if(levels<40 && levels-1<list.length){
+    const n=levels-1, pick=[];
+    for(let k=1;k<=n;k++){ const t=k/n; let best=null,bd=9; for(const o of list){ if(pick.includes(o)) continue; const d=Math.abs(o.v-t); if(d<bd){bd=d;best=o;} } if(best) pick.push(best); }
+    list=pick.sort((a,b)=>a.v-b.v);
+  }
+  return [{c:' ',v:0},...list];
+}
+
+/* ================= Berechnung ================= */
+function layout(s, im){
+  const aw=s.pw-s.mLeft-s.mRight, ah=s.ph-s.mTop-s.mBottom;
+  // letzte Spalte/Zeile braucht nur die Zeichenbreite/-höhe, nicht den vollen Abstand
+  const cw=charW(s);
+  const C=Math.max(1,Math.floor((aw*s.scale/100 - cw)/s.pitch)+1), R=Math.max(1,Math.floor((ah*s.scale/100 - s.charH)/s.lineH)+1);
+  let cols=C, rows=R;
+  if(im && s.fit==='fit'){
+    const a=im.width/im.height;
+    if(a >= (C*s.pitch)/(R*s.lineH)) rows=clamp(Math.round(C*s.pitch/(a*s.lineH)),1,R);
+    else cols=clamp(Math.round(R*s.lineH*a/s.pitch),1,C);
+  }
+  const usedW=(cols-1)*s.pitch+cw, usedH=(rows-1)*s.lineH+s.charH;
+  // Schreibfeld des Geräts → Spalten/Zeilen pro Feld
+  const fCols=Math.max(1,Math.floor((s.fieldW-cw)/s.pitch)+1), fRows=Math.max(1,Math.floor((s.fieldH-s.charH)/s.lineH)+1);
+  return {aw,ah,cols,rows,cw,offX:Math.max(0,(aw-usedW)/2), offY:Math.max(0,(ah-usedH)/2), usedW, usedH,
+    fCols, fRows, nFx:Math.ceil(cols/fCols), nFy:Math.ceil(rows/fRows)};
+}
+function sampleRGB(im, s, L){ // mittlere Farbe je Zelle (0..1), unbearbeitet
+  const {cols,rows}=L, k=4, W=cols*k, H=rows*k;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const x=cv.getContext('2d',{willReadFrequently:true}); x.fillStyle='#fff'; x.fillRect(0,0,W,H);
+  x.imageSmoothingEnabled=true; x.imageSmoothingQuality='high';
+  let sx=0,sy=0,sw=im.width,sh=im.height;
+  if(s.fit==='fill'){ const g=(cols*s.pitch)/(rows*s.lineH), a=sw/sh; if(a>g){ sw=sh*g; sx=(im.width-sw)/2; } else { sh=sw/g; sy=(im.height-sh)/2; } }
+  x.drawImage(im,sx,sy,sw,sh,0,0,W,H);
+  const d=x.getImageData(0,0,W,H).data, R=new Float32Array(cols*rows*3);
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+    let a=0,b=0,e=0;
+    for(let yy=0;yy<k;yy++) for(let xx=0;xx<k;xx++){ const p=((r*k+yy)*W + c*k+xx)*4; a+=d[p]; b+=d[p+1]; e+=d[p+2]; }
+    const i=(r*cols+c)*3, n=k*k*255; R[i]=a/n; R[i+1]=b/n; R[i+2]=e/n;
+  }
+  return R;
+}
+const lum=(r,g,b)=>0.2126*r+0.7152*g+0.0722*b;
+function adjust(v,s,cf){ v=clamp((v-0.5)*cf+0.5+s.brightness,0,1); v=Math.pow(v,s.gamma); return s.invert?1-v:v; }
+function sharpenArr(A, cols, rows, stride, amt){
+  const S=Float32Array.from(A);
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) for(let ch=0;ch<stride;ch++){
+    let m=0,n=0;
+    for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){ const rr=r+dy,cc=c+dx; if(rr<0||cc<0||rr>=rows||cc>=cols||(!dx&&!dy)) continue; m+=S[(rr*cols+cc)*stride+ch]; n++; }
+    const i=(r*cols+c)*stride+ch; A[i]=clamp(S[i]+amt*(S[i]-m/n),0,1);
+  }
+}
+function sampleDarkness(im, s, L){
+  const {cols,rows}=L, R=sampleRGB(im,s,L), D=new Float32Array(cols*rows);
+  const cf=Math.tan((s.contrast+1)*Math.PI/4);
+  for(let i=0;i<D.length;i++) D[i]=1-adjust(lum(R[i*3],R[i*3+1],R[i*3+2]),s,cf);
+  if(s.autoLevels){ const srt=Float32Array.from(D).sort(); const lo=srt[Math.floor(srt.length*0.01)], hi=srt[Math.floor(srt.length*0.99)]; if(hi-lo>0.05) for(let i=0;i<D.length;i++) D[i]=clamp((D[i]-lo)/(hi-lo),0,1); }
+  if(s.sharpen>0) sharpenArr(D,cols,rows,1,s.sharpen);
+  if(s.bgCut>0) for(let i=0;i<D.length;i++) if(D[i]<s.bgCut) D[i]=0;
+  return D;
+}
+function sampleColor(im, s, L){ // bearbeitete Farbe je Zelle (Helligkeit 1 = Papierweiß)
+  const {cols,rows}=L, n=cols*rows, C=sampleRGB(im,s,L);
+  const cf=Math.tan((s.contrast+1)*Math.PI/4);
+  for(let i=0;i<C.length;i++) C[i]=adjust(C[i],s,cf);
+  if(s.autoLevels){
+    const Ls=new Float32Array(n); for(let i=0;i<n;i++) Ls[i]=lum(C[i*3],C[i*3+1],C[i*3+2]); Ls.sort();
+    const lo=Ls[Math.floor(n*0.01)], hi=Ls[Math.floor(n*0.99)];
+    if(hi-lo>0.05) for(let i=0;i<C.length;i++) C[i]=clamp((C[i]-lo)/(hi-lo),0,1);
+  }
+  if(s.sharpen>0) sharpenArr(C,cols,rows,3,s.sharpen);
+  if(s.bgCut>0) for(let i=0;i<n;i++) if(1-lum(C[i*3],C[i*3+1],C[i*3+2])<s.bgCut){ C[i*3]=C[i*3+1]=C[i*3+2]=1; }
+  return C;
+}
+function mapChars(D, cols, rows, pal, dither){
+  const E=Float32Array.from(D), out=new Array(rows);
+  const add=(r,c,v)=>{ if(r<rows&&c>=0&&c<cols) E[r*cols+c]+=v; };
+  for(let r=0;r<rows;r++){
+    let line='';
+    for(let c=0;c<cols;c++){
+      const t=E[r*cols+c]; let best=pal[0], bd=Infinity;
+      for(const p of pal){ const dd=Math.abs(p.v-t); if(dd<bd){bd=dd;best=p;} }
+      line+=best.c; const er=t-best.v;
+      if(dither==='fs'){ add(r,c+1,er*7/16); add(r+1,c-1,er*3/16); add(r+1,c,er*5/16); add(r+1,c+1,er/16); }
+      else if(dither==='atk'){ const q=er/8; add(r,c+1,q); add(r,c+2,q); add(r+1,c-1,q); add(r+1,c,q); add(r+1,c+1,q); add(r+2,c,q); }
+    }
+    out[r]=line;
+  }
+  return out;
+}
+const hexRgb=h=>{ const m=/^#?([0-9a-f]{6})$/i.exec(h||''); const v=m?parseInt(m[1],16):0x1a1a1a; return [(v>>16&255)/255,(v>>8&255)/255,(v&255)/255]; };
+/* Farbmodus: je Zelle die Kombination aus Stift und Zeichen wählen, deren Mischung
+   (Papierweiß × (1 − Deckung) + Stiftfarbe × Deckung) der Bildfarbe am nächsten kommt. */
+function mapColor(C, cols, rows, pal, pens, dither){
+  const P=pens.map(p=>hexRgb(p.color)), cand=[];
+  for(const q of pal){
+    if(q.c===' '){ cand.push({c:' ',p:0,r:1,g:1,b:1}); continue; }
+    P.forEach((rgb,pi)=>cand.push({c:q.c,p:pi,r:1-(1-rgb[0])*q.v,g:1-(1-rgb[1])*q.v,b:1-(1-rgb[2])*q.v}));
+  }
+  const E=Float32Array.from(C), lines=new Array(rows), penLines=new Array(rows);
+  const add=(r,c,er,eg,eb,f)=>{ if(r<rows&&c>=0&&c<cols){ const i=(r*cols+c)*3; E[i]+=er*f; E[i+1]+=eg*f; E[i+2]+=eb*f; } };
+  for(let r=0;r<rows;r++){
+    let line='', pl='';
+    for(let c=0;c<cols;c++){
+      const i=(r*cols+c)*3, tr=clamp(E[i],-0.3,1.3), tg=clamp(E[i+1],-0.3,1.3), tb=clamp(E[i+2],-0.3,1.3);
+      let best=cand[0], bd=Infinity;
+      for(const k of cand){ const dr=k.r-tr, dg=k.g-tg, db=k.b-tb, dd=2*dr*dr+4*dg*dg+3*db*db; if(dd<bd){bd=dd;best=k;} }
+      line+=best.c; pl+=best.p;
+      const er=tr-best.r, eg=tg-best.g, eb=tb-best.b;
+      if(dither==='fs'){ add(r,c+1,er,eg,eb,7/16); add(r+1,c-1,er,eg,eb,3/16); add(r+1,c,er,eg,eb,5/16); add(r+1,c+1,er,eg,eb,1/16); }
+      else if(dither==='atk'){ for(const [dy,dx] of [[0,1],[0,2],[1,-1],[1,0],[1,1],[2,0]]) add(r+dy,c+dx,er,eg,eb,1/8); }
+    }
+    lines[r]=line; penLines[r]=pl;
+  }
+  return {lines, pens:penLines};
+}
+/* Stiftwechsel zählen (Reihenfolge wie in der Vorlage) */
+function penChanges(lines, pens, cols, rows, fC, fR, order){
+  if(!pens) return 0;
+  const used=new Set(); for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) if(lines[r][c]!==' ') used.add(pens[r][c]);
+  if(order!=='field') return Math.max(0,used.size-1);
+  let groups=0;
+  for(let fy=0;fy*fR<rows;fy++) for(let fx=0;fx*fC<cols;fx++){
+    const u=new Set();
+    for(let r=fy*fR;r<Math.min(rows,(fy+1)*fR);r++) for(let c=fx*fC;c<Math.min(cols,(fx+1)*fC);c++) if(lines[r][c]!==' ') u.add(pens[r][c]);
+    groups+=u.size;
+  }
+  return Math.max(0,groups-1);
+}
+/* Stiftfarben aus dem Bild vorschlagen.
+   Modell (wie bei der Berechnung): Jede Zelle ist eine Mischung aus Papierweiß und EINER Stiftfarbe –
+   alle Töne eines Stifts liegen auf der Strecke „Weiß → Stift“. Gesucht wird die Stift-Kombination,
+   mit der sich das Bild am besten nachbilden lässt (gierige Auswahl + Nachjustieren).
+   Dadurch werden Stifte immer kräftig (heller Himmel → blauer Stift mit wenig Zeichen)
+   und auch große, gedeckte Flächen (z. B. Wiese) bekommen eine eigene Farbe. */
+function suggestPens(k, keepBlack){
+  if(!img) return null;
+  const s=proj.settings, L=layout(s,img), C=sampleColor(img,s,L);
+  const n=C.length/3, step=Math.max(1,Math.floor(n/5000)), pts=[];
+  for(let i=0;i<n;i+=step){ const d=[1-C[i*3],1-C[i*3+1],1-C[i*3+2]].map(v=>Math.max(0,v)); if(Math.hypot(...d)>=0.04) pts.push(d); }
+  if(!pts.length) return null;
+  const W=[2,4,3], wd=(a,b)=>W[0]*a[0]*b[0]+W[1]*a[1]*b[1]+W[2]*a[2]*b[2];
+  const norm=v=>{ const m=Math.hypot(...v)||1; return v.map(x=>x/m); };
+  const errTo=(d,q,qq)=>{ const t=clamp(wd(d,q)/qq,0,1); const e0=d[0]-t*q[0], e1=d[1]-t*q[1], e2=d[2]-t*q[2]; return W[0]*e0*e0+W[1]*e1*e1+W[2]*e2*e2; };
+  const strong=(u,M)=>{ const Mmax=1/Math.max(...u); return u.map(v=>v*clamp(M==null?0.9*Mmax:M,0,Mmax)); };
+  const BLACK=[0.9,0.9,0.9]; // #1a1a1a
+  // Kandidaten: häufige Farbrichtungen im Bild, kräftig gemacht
+  const bins=new Map();
+  for(const d of pts){ const u=norm(d), key=u.map(v=>Math.round(v*7)).join(','); const b=bins.get(key)||{n:0,s:[0,0,0]}; b.n++; for(let j=0;j<3;j++) b.s[j]+=u[j]; bins.set(key,b); }
+  const cand=[...bins.values()].sort((a,b)=>b.n-a.n).slice(0,90).map(b=>strong(norm(b.s)));
+  if(keepBlack) cand.push(BLACK);
+  // gierig: jeweils den Stift dazunehmen, der den Gesamtfehler am stärksten senkt
+  const best=new Float64Array(pts.length).fill(Infinity), pens=[], fixed=[];
+  const addPen=(q,fx)=>{ const qq=wd(q,q)||1; pts.forEach((d,i)=>{ const e=errTo(d,q,qq); if(e<best[i]) best[i]=e; }); pens.push(q); fixed.push(fx); };
+  if(keepBlack) addPen(BLACK,true);
+  while(pens.length<k){
+    let bq=null, bg=0;
+    for(const q of cand){ const qq=wd(q,q)||1; let g=0; for(let i=0;i<pts.length;i++){ const e=errTo(pts[i],q,qq); if(e<best[i]) g+=best[i]-e; } if(g>bg){bg=g;bq=q;} }
+    if(!bq || bg<1e-3*pts.length*0.01) break;     // kein nennenswerter Gewinn mehr
+    addPen(bq,false);
+  }
+  // Nachjustieren: Zellen dem besten Stift zuordnen, Richtung + Stärke je Stift neu bestimmen
+  let assign=new Int32Array(pts.length);
+  for(let it=0;it<6;it++){
+    const qqs=pens.map(q=>wd(q,q)||1);
+    pts.forEach((d,i)=>{ let bi=0,be=Infinity; pens.forEach((q,pi)=>{ const e=errTo(d,q,qqs[pi]); if(e<be){be=e;bi=pi;} }); assign[i]=bi; });
+    pens.forEach((q,pi)=>{
+      if(fixed[pi]) return;
+      const sum=[0,0,0]; let cnt=0; pts.forEach((d,i)=>{ if(assign[i]===pi){ sum[0]+=d[0]; sum[1]+=d[1]; sum[2]+=d[2]; cnt++; } });
+      if(!cnt) return;
+      const u=norm(sum), t=[]; pts.forEach((d,i)=>{ if(assign[i]===pi) t.push(d[0]*u[0]+d[1]*u[1]+d[2]*u[2]); }); t.sort((a,b)=>a-b);
+      const Mmax=1/Math.max(...u); pens[pi]=strong(u, Math.max(t[Math.floor(t.length*0.95)], 0.85*Mmax));
+    });
+  }
+  const cnt=pens.map((_,pi)=>assign.reduce((a,v)=>a+(v===pi),0));
+  const hex=d=>'#'+d.map(x=>Math.round(clamp(1-x,0,1)*255).toString(16).padStart(2,'0')).join('');
+  return pens.map((q,pi)=>({hex:hex(q),n:cnt[pi],black:fixed[pi]}))
+             .filter(o=>o.n>0||o.black)
+             .sort((a,b)=>(b.black-a.black)||(b.n-a.n)).map(o=>o.hex);
+}
+function nearestPresetName(hex){
+  const t=hexRgb(hex); let best=PEN_PRESETS[0], bd=Infinity;
+  for(const p of PEN_PRESETS){ const c=hexRgb(p.color), dd=(c[0]-t[0])**2+(c[1]-t[1])**2+(c[2]-t[2])**2; if(dd<bd){bd=dd;best=p;} }
+  return best.name;
+}
+let rcTimer=null;
+function recompute(){ clearTimeout(rcTimer); rcTimer=setTimeout(recomputeNow,60); }
+function recomputeNow(){
+  const s=proj.settings, L=layout(s,img), pal=palette(proj.chars, s.levels);
+  $('#palOut').textContent = pal.map(p=>p.c===' '?'␣':p.c).join('');
+  let lines=null, pens=null;
+  const color = s.colorMode && proj.pens.length>0;
+  if(img && color){ const C=sampleColor(img,s,L); ({lines,pens}=mapColor(C,L.cols,L.rows,pal,proj.pens,s.dither)); }
+  else if(img){ const D=sampleDarkness(img,s,L); lines=mapChars(D,L.cols,L.rows,pal,s.dither); }
+  draft={L,lines,pal,pens,penList: color? proj.pens.map(p=>({...p})) : null};
+  const ink = lines ? lines.reduce((n,l)=>n+l.replace(/ /g,'').length,0) : 0;
+  const used = lines ? new Set(lines.join('').replace(/ /g,'')).size : 0;
+  // Zeichen je Stift
+  const perPen=new Array(proj.pens.length).fill(0);
+  if(pens) lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++) if(ln[c]!==' ') perPen[+pens[r][c]]++; });
+  $$('#penList .cnt').forEach((el,i)=>el.textContent= pens ? perPen[i].toLocaleString('de-DE') : '');
+  const nChanges = pens ? penChanges(lines,pens,L.cols,L.rows,L.fCols,L.fRows,s.order) : 0;
+  $('#stats').innerHTML = [
+    [`${L.cols} × ${L.rows}`,'Spalten × Zeilen'],
+    [`${fmt(L.usedW,0)} × ${fmt(L.usedH,0)} mm`,'Bildfläche auf Papier'],
+    [lines? ink.toLocaleString('de-DE') : '–','Zeichen zu schreiben'],
+    [lines? used : '–','verschiedene Zeichen'],
+    [lines? '≈ '+hms(ink*s.secPerChar) : '–','geschätzte Schreibzeit'],
+    [`${fmt(s.mLeft+L.offX,1)} / ${fmt(s.mTop+L.offY,1)} mm`,'Start links / oben'],
+    [`${L.nFx} × ${L.nFy} = ${L.nFx*L.nFy}`,`Geräte-Felder (je ${L.fCols} Sp. × ${L.fRows} Z.)`],
+    ...(pens? [[`${perPen.filter(n=>n).length} / ${nChanges}`,'Stifte benutzt / Stiftwechsel']] : []),
+  ].map(([b,t])=>`<div class="stat"><b>${b}</b><span>${t}</span></div>`).join('');
+  $('#bCommit').disabled=!lines; $('#bPrintDraft').disabled=!lines;
+  const prog = proj.grid && done ? done.reduce((a,b)=>a+b,0) : 0;
+  $('#commitHint').textContent = proj.grid ? (prog ? `Achtung: Es gibt schon eine Vorlage mit ${prog} abgehakten Zeichen. Übernehmen ersetzt sie.` : 'Es gibt schon eine Vorlage. Übernehmen ersetzt sie.') : '';
+  drawPreview();
+}
+function drawPreview(){
+  const cv=$('#prev'); if(!cv.offsetParent||!draft) return;
+  const s=proj.settings, L=draft.L, dpr=window.devicePixelRatio||1;
+  const availW=Math.max(260, cv.parentElement.clientWidth), availH=Math.max(360, window.innerHeight-260);
+  const sc=Math.min(availW/s.pw, availH/s.ph);
+  const W=Math.round(s.pw*sc), H=Math.round(s.ph*sc);
+  cv.style.width=W+'px'; cv.style.height=H+'px'; cv.width=W*dpr; cv.height=H*dpr;
+  const x=cv.getContext('2d'); x.setTransform(dpr*sc,0,0,dpr*sc,0,0);
+  x.fillStyle='#fffefa'; x.fillRect(0,0,s.pw,s.ph);
+  x.strokeStyle='#c9c6bc'; x.lineWidth=0.4; x.setLineDash([2,2]); x.strokeRect(s.mLeft,s.mTop,L.aw,L.ah); x.setLineDash([]);
+  if(draft.lines && (L.nFx>1||L.nFy>1)){ // Geräte-Felder
+    x.strokeStyle='rgba(47,111,222,.55)'; x.lineWidth=0.35; const bx=s.mLeft+L.offX, by=s.mTop+L.offY;
+    for(let i=1;i<L.nFx;i++){ const xx=bx+i*L.fCols*s.pitch-(s.pitch-L.cw)/2; x.beginPath(); x.moveTo(xx,by); x.lineTo(xx,by+L.usedH); x.stroke(); }
+    for(let j=1;j<L.nFy;j++){ const yy=by+j*L.fRows*s.lineH-(s.lineH-s.charH)/2; x.beginPath(); x.moveTo(bx,yy); x.lineTo(bx+L.usedW,yy); x.stroke(); }
+  }
+  if(!draft.lines){ x.fillStyle='#999'; x.font='8px system-ui'; x.textAlign='center'; x.fillText('Bild laden',s.pw/2,s.ph/2); return; }
+  x.fillStyle='#1a1a1a'; x.font=`${s.charH/0.716}px Arial, Helvetica, sans-serif`; x.textAlign='center'; x.textBaseline='alphabetic';
+  const x0=s.mLeft+L.offX+L.cw/2, y0=s.mTop+L.offY+s.charH;
+  const cols = draft.penList ? draft.penList.map(p=>p.color) : null;
+  draft.lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++){ const ch=ln[c]; if(ch===' ') continue; if(cols) x.fillStyle=cols[+draft.pens[r][c]]; x.fillText(ch, x0+c*s.pitch, y0+r*s.lineH); } });
+}
+window.addEventListener('resize',()=>{ clearTimeout(drawPreview.t); drawPreview.t=setTimeout(drawPreview,120); });
+
+/* ================= Bild laden ================= */
+function showThumb(){ $('#dropInner').innerHTML = proj.image ? `<img src="${proj.image}" alt="">Anderes Bild: hierher ziehen oder klicken` : 'Bild hierher ziehen oder klicken'; }
+function loadImageFile(f){
+  if(!f||!f.type.startsWith('image/')) return toast('Bitte eine Bilddatei wählen');
+  const rd=new FileReader();
+  rd.onload=()=>{ const im=new Image(); im.onload=()=>{
+      const m=1400, sc=Math.min(1,m/Math.max(im.width,im.height));
+      const cv=document.createElement('canvas'); cv.width=Math.round(im.width*sc); cv.height=Math.round(im.height*sc);
+      const x=cv.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,cv.width,cv.height); x.drawImage(im,0,0,cv.width,cv.height);
+      proj.image=cv.toDataURL('image/jpeg',0.88);
+      if(/^Bild \d/.test(proj.name)){ proj.name=f.name.replace(/\.[^.]+$/,''); $('#projName').value=proj.name; }
+      const im2=new Image(); im2.onload=()=>{ img=im2; showThumb(); recompute(); saveSoon(); }; im2.src=proj.image;
+    }; im.src=rd.result; };
+  rd.readAsDataURL(f);
+}
+const drop=$('#drop');
+drop.onclick=e=>{
+  if(pickPen!=null){
+    if(e.target.tagName==='IMG' && img){ const c=pickColorAt(e), p=proj.pens[pickPen]; p.color=c; if(!p.name||/^Stift \d/.test(p.name)||PEN_PRESETS.some(q=>q.name===p.name)) p.name=nearestPresetName(c); pickPen=null; buildPenList(); recompute(); saveSoon(); toast('Farbe übernommen: '+c); }
+    else { pickPen=null; buildPenList(); }
+    return;
+  }
+  $('#fileImg').click();
+};
+$('#fileImg').onchange=e=>{ loadImageFile(e.target.files[0]); e.target.value=''; };
+['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>loadImageFile(e.dataTransfer.files[0]));
+window.addEventListener('paste',e=>{ const it=[...(e.clipboardData||{}).items||[]].find(i=>i.type.startsWith('image/')); if(it && $('#tab-setup').classList.contains('on')) loadImageFile(it.getAsFile()); });
+
+/* ================= Vorlage übernehmen ================= */
+$('#bCommit').onclick=()=>{
+  if(!draft||!draft.lines) return;
+  const prog = proj.grid && done ? done.reduce((a,b)=>a+b,0) : 0;
+  if(prog && !confirm(`Die bestehende Vorlage hat ${prog} abgehakte Zeichen. Wirklich ersetzen? Speichere vorher ggf. eine Datei.`)) return;
+  const s=proj.settings, L=draft.L;
+  proj.grid={ cols:L.cols, rows:L.rows, lines:draft.lines.slice(), created:Date.now(),
+    pens: draft.pens? draft.pens.slice() : null, penList: draft.penList? draft.penList.map(p=>({...p})) : null,
+    geo:{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH,
+         fCols:L.fCols,fRows:L.fRows,order:s.order,
+         dev:s.linked?{h:s.charH,width:s.widthPct,space:s.letterSpace}:null} };
+  done=new Uint8Array(L.cols*L.rows); undoStack=[];
+  saveNow(); buildGrid(); showTab('tpl'); toast('Vorlage übernommen');
+};
+
+/* ================= Vorlage / Abhaken ================= */
+let cells=[], rowEls=[], inkTotal=0, nextIdx=-1, anchor=null;
+const isInk=i=>proj.grid.lines[(i/proj.grid.cols)|0][i%proj.grid.cols]!==' ';
+const penAt=i=>{ const g=proj.grid; return g.pens? +g.pens[(i/g.cols)|0][i%g.cols] : 0; };
+const penList=()=>proj.grid.penList || [{name:'Stift',color:''}];
+const penSw=p=>p.color? `<span class="sw" style="background:${escH(p.color)}"></span>` : '';
+function applyZoom(){
+  const g=proj&&proj.grid; if(!g) return;
+  const z=view.zoom, cw=g.geo.pitch*z, ch=g.geo.lineH*z;
+  const el=$('#grid'); el.style.setProperty('--cw',cw+'px'); el.style.setProperty('--ch',ch+'px');
+  el.style.setProperty('--fs',Math.max(7,Math.min(cw*1.45,ch*0.92))+'px');
+}
+function buildGrid(){
+  const el=$('#grid'); el.innerHTML=''; cells=[]; rowEls=[];
+  const g=proj&&proj.grid;
+  $('#writer').style.display=g?'':'none';
+  fillPenView();
+  if(!g){ el.innerHTML='<div class="empty">Noch keine Vorlage. Unter „1 · Einrichten“ ein Bild laden und „Als Vorlage übernehmen“ klicken.</div>'; updateProgress(); return; }
+  applyZoom();
+  el.classList.toggle('colored', !!g.pens);
+  const PL=penList();
+  const frag=document.createDocumentFragment();
+  const ru=document.createElement('div'); ru.className='ruler'; ru.innerHTML='<div class="rn"></div>';
+  for(let c=0;c<g.cols;c++){ const s=document.createElement('div'); s.className='rc'+((c%10===0)?' k10':''); if(c%10===0) s.textContent=c+1; ru.appendChild(s); }
+  frag.appendChild(ru);
+  const dot=view.dots?'·':' ';
+  const fC=g.geo.fCols||g.cols, fR=g.geo.fRows||g.rows;
+  buildOrder();
+  for(let r=0;r<g.rows;r++){
+    const row=document.createElement('div'); row.className='gr'+(r%10===0&&r?' r10':r%5===0&&r?' r5':'')+(r&&r%fR===0?' fr':'');
+    const rn=document.createElement('div'); rn.className='rn'; rn.dataset.r=r; rn.textContent=r+1; row.appendChild(rn);
+    const ln=g.lines[r];
+    for(let c=0;c<g.cols;c++){
+      const i=r*g.cols+c, ch=ln[c], s=document.createElement('div');
+      s.className='c'+(c%10===0&&c?' k10':c%5===0&&c?' k5':'')+(c&&c%fC===0?' fb':'')+(ch===' '?' s':'')+(done[i]&&ch!==' '?' d':'');
+      if(g.pens && ch!==' ') s.style.color=PL[+g.pens[r][c]].color;
+      s.dataset.i=i; s.textContent= ch===' '?dot:ch; row.appendChild(s); cells[i]=s;
+    }
+    frag.appendChild(row); rowEls[r]=rn;
+  }
+  el.appendChild(frag);
+  inkTotal=g.lines.reduce((n,l)=>n+l.replace(/ /g,'').length,0);
+  for(let r=0;r<g.rows;r++) updateRowState(r);
+  updateNext(); applyPenView(); updateProgress();
+}
+function updateRowState(r){ const g=proj.grid; let full=true, any=false; for(let c=0;c<g.cols;c++){ const i=r*g.cols+c; if(g.lines[r][c]!==' '){ any=true; if(!done[i]){full=false;break;} } } rowEls[r].classList.toggle('full', any&&full); }
+// Schreibreihenfolge als Liste der Zeichen-Indizes: Feld → Stift → Zeilen | Stift → Feld → Zeilen | Stift → Zeilen
+let order=[], orderPos=null, lastField=null, lastPen=null;
+function buildOrder(){
+  const g=proj.grid, G=g.geo, fC=G.fCols||g.cols, fR=G.fRows||g.rows, nP=g.pens? penList().length : 1; order=[];
+  const field=(fx,fy,p)=>{ for(let r=fy*fR;r<Math.min(g.rows,(fy+1)*fR);r++) for(let c=fx*fC;c<Math.min(g.cols,(fx+1)*fC);c++){ const i=r*g.cols+c; if(g.lines[r][c]!==' '&&penAt(i)===p) order.push(i); } };
+  const nfx=Math.ceil(g.cols/fC), nfy=Math.ceil(g.rows/fR);
+  if(G.order==='rows'){ for(let p=0;p<nP;p++) for(let r=0;r<g.rows;r++) for(let c=0;c<g.cols;c++){ const i=r*g.cols+c; if(g.lines[r][c]!==' '&&penAt(i)===p) order.push(i); } }
+  else if(G.order==='pen'){ for(let p=0;p<nP;p++) for(let fy=0;fy<nfy;fy++) for(let fx=0;fx<nfx;fx++) field(fx,fy,p); }
+  else { for(let fy=0;fy<nfy;fy++) for(let fx=0;fx<nfx;fx++) for(let p=0;p<nP;p++) field(fx,fy,p); }
+  orderPos=new Int32Array(g.cols*g.rows).fill(-1); order.forEach((i,p)=>orderPos[i]=p); lastField=null; lastPen=null;
+}
+function findNext(){ for(const i of order) if(!done[i]) return i; return -1; }
+function fieldOf(r,c){ const G=proj.grid.geo, fC=G.fCols||proj.grid.cols, fR=G.fRows||proj.grid.rows; return {fx:Math.floor(c/fC), fy:Math.floor(r/fR), nfx:Math.ceil(proj.grid.cols/fC), nfy:Math.ceil(proj.grid.rows/fR), fC, fR}; }
+function updateNext(){
+  if(nextIdx>=0&&cells[nextIdx]) cells[nextIdx].classList.remove('n');
+  nextIdx=findNext();
+  const g=proj.grid;
+  if(nextIdx<0){ $('#nextChar').textContent='✓'; $('#nextChar').style.color=''; $('#nextInfo').innerHTML='<b>Fertig!</b> Alle Zeichen sind abgehakt.'; $('#strip').innerHTML=''; return; }
+  cells[nextIdx].classList.add('n');
+  const r=(nextIdx/g.cols)|0, c=nextIdx%g.cols, ln=g.lines[r], G=g.geo, F=fieldOf(r,c);
+  const PL=penList(), pen=penAt(nextIdx), P=PL[pen];
+  const fc0=F.fx*F.fC, fr0=F.fy*F.fR;
+  // Leerschritte seit dem letzten Zeichen DESSELBEN Stifts in dieser Zeile (andere Farben werden übersprungen)
+  let gap=0; for(let k=c-1;k>=fc0;k--){ const i=r*g.cols+k; if(ln[k]!==' '&&penAt(i)===pen) break; gap++; }
+  const x=G.mLeft+G.offX+c*G.pitch, y=G.mTop+G.offY+G.charH+r*G.lineH;
+  const fx0=G.mLeft+G.offX+fc0*G.pitch, fy0=G.mTop+G.offY+fr0*G.lineH;
+  const fieldNo=F.fy*F.nfx+F.fx+1, nF=F.nfx*F.nfy, fkey=F.fx+','+F.fy;
+  const msg=[];
+  if(lastField!==null && lastField!==fkey) msg.push(`Gerät umsetzen → Feld ${fieldNo}`);
+  if(g.pens && lastPen!==null && lastPen!==pen) msg.push(`Stift wechseln → ${P.name}`);
+  if(msg.length) toast(msg.join(' · '));
+  const penChanged = lastPen!==pen;
+  lastField=fkey; lastPen=pen;
+  if(penChanged && view.penView==='cur') applyPenView();
+  $('#nextChar').textContent=ln[c]; $('#nextChar').style.color=P.color||'';
+  $('#nextInfo').innerHTML=
+    (g.pens? `<span id="penNow">${penSw(P)} Stift ${pen+1}: ${escH(P.name)}</span> · ` : '')+
+    (nF>1? `<b>Feld ${fieldNo}/${nF}</b> (Start X ${fmt(fx0,1)} / Y ${fmt(fy0,1)} mm) · im Feld Zeile <b>${r-fr0+1}</b>, Spalte <b>${c-fc0+1}</b>` : '')+
+    ((g.pens||nF>1)? '<br>' : '')+
+    `Zeile <b>${r+1}</b>/${g.rows} · Spalte <b>${c+1}</b>/${g.cols} · `+
+    `X <b>${fmt(x,1)} mm</b> (linke Kante) · Y <b>${fmt(y,1)} mm</b> (Grundlinie) ab Papierecke oben links`+
+    (gap? ` · davor <b>${gap}× Leerschritt</b>` : c===fc0? ' · Zeilenanfang' : ' · direkt anschließend');
+  const st=$('#strip'); st.innerHTML='';
+  const k0=fc0, k1=Math.min(g.cols,fc0+F.fC);
+  for(let k=k0;k<k1;k++){ const ch=ln[k], s=document.createElement('span'); const i=r*g.cols+k;
+    if(ch===' '){ s.className='s'; s.textContent='·'; }
+    else { const op=g.pens&&penAt(i)!==pen; s.className = k===c?'n' : op? 'o' : done[i]?'d':''; s.textContent= op? '·' : ch; if(g.pens) s.style.color=PL[penAt(i)].color; }
+    st.appendChild(s); }
+  const cur=st.children[c-k0]; if(cur) st.scrollLeft = cur.offsetLeft - st.clientWidth/2;
+}
+/* Anzeige-Filter nach Stift */
+function fillPenView(){
+  const g=proj&&proj.grid, sel=$('#penView');
+  $('#penViewWrap').style.display = g&&g.pens ? '' : 'none';
+  if(!g||!g.pens) return;
+  if(view.penView==null) view.penView='all';
+  sel.innerHTML='<option value="all">alle Stifte</option><option value="cur">nur aktueller Stift</option>'+penList().map((p,i)=>`<option value="${i}">nur ${i+1}: ${escH(p.name)}</option>`).join('');
+  if(![...sel.options].some(o=>o.value===String(view.penView))) view.penView='all';
+  sel.value=String(view.penView);
+}
+function applyPenView(){
+  const g=proj&&proj.grid; if(!g) return;
+  let f=null;
+  if(g.pens && view.penView!=='all') f = view.penView==='cur' ? (nextIdx>=0? penAt(nextIdx) : null) : +view.penView;
+  for(let i=0;i<cells.length;i++){ if(!isInk(i)) continue; cells[i].classList.toggle('dim', f!=null && penAt(i)!==f); }
+}
+$('#penView').onchange=e=>{ view.penView=e.target.value; lsSet('view',view); applyPenView(); };
+function updateProgress(){
+  const g=proj&&proj.grid;
+  if(!g){ $('#progBar').style.width='0'; $('#progTxt').textContent='Keine Vorlage'; return; }
+  const PL=penList(), dp=new Array(PL.length).fill(0), tp=new Array(PL.length).fill(0);
+  let d=0; for(let i=0;i<done.length;i++) if(isInk(i)){ const p=penAt(i); tp[p]++; if(done[i]){ d++; dp[p]++; } }
+  const pct=inkTotal? d/inkTotal*100 : 0;
+  $('#progBar').style.width=pct+'%';
+  const t=proj.log[today()]||0, left=(inkTotal-d)*proj.settings.secPerChar;
+  let txt=`${d.toLocaleString('de-DE')} / ${inkTotal.toLocaleString('de-DE')} Zeichen (${fmt(pct,1)} %) · heute ${t} · noch ≈ ${hms(left)}`;
+  $('#progTxt').innerHTML=escH(txt) + (g.pens? '<br>'+PL.map((p,i)=>tp[i]? `${penSw(p)} ${escH(p.name)} ${dp[i]}/${tp[i]}` : '').filter(Boolean).join(' &nbsp; ') : '');
+}
+function setCells(list, val, record=true){
+  const g=proj.grid, changed=[], rows=new Set(); let delta=0;
+  for(const i of list){ if(!isInk(i)||done[i]===val) continue; changed.push(i); done[i]=val; cells[i].classList.toggle('d',!!val); rows.add((i/g.cols)|0); delta+= val?1:-1; }
+  if(!changed.length) return;
+  if(record){ undoStack.push({idx:changed,val}); if(undoStack.length>500) undoStack.shift(); }
+  const t=today(); proj.log[t]=Math.max(0,(proj.log[t]||0)+delta);
+  rows.forEach(updateRowState); updateNext(); updateProgress(); saveSoon();
+}
+$('#grid').addEventListener('click',e=>{
+  if(!proj.grid) return;
+  const c=e.target.closest('.c'), rn=e.target.closest('.gr > .rn');
+  if(c){ const i=+c.dataset.i; if(!isInk(i)) return;
+    // Shift+Klick: alles in Schreibreihenfolge zwischen letztem Klick (bzw. Anfang) und hier abhaken
+    if(e.shiftKey){ const a=anchor!=null? orderPos[anchor] : 0, b=orderPos[i]; const L=order.slice(Math.min(a,b), Math.max(a,b)+1); setCells(L,1); }
+    else setCells([i], done[i]?0:1);
+    anchor=i;
+  } else if(rn){ const r=+rn.dataset.r, g=proj.grid, L=[]; for(let k=0;k<g.cols;k++) L.push(r*g.cols+k); const full=rn.classList.contains('full'); setCells(L, full?0:1); }
+});
+function markNext(){ if(nextIdx>=0){ setCells([nextIdx],1); scrollToNext(true); } }
+function markRow(){ // aktuelle Zeile im aktuellen Feld, nur der aktuelle Stift
+  if(nextIdx<0) return; const g=proj.grid, r=(nextIdx/g.cols)|0, F=fieldOf(r,nextIdx%g.cols), pen=penAt(nextIdx), L=[];
+  for(let k=F.fx*F.fC;k<Math.min(g.cols,(F.fx+1)*F.fC);k++){ const i=r*g.cols+k; if(penAt(i)===pen) L.push(i); } setCells(L,1); scrollToNext(true); }
+function undo(){ const u=undoStack.pop(); if(!u) return toast('Nichts rückgängig zu machen'); setCells(u.idx, u.val?0:1, false); scrollToNext(true); }
+function back(){ // letztes abgehaktes Zeichen (in Schreibreihenfolge) vor dem nächsten wieder öffnen
+  let p=(nextIdx<0? order.length : orderPos[nextIdx])-1; while(p>=0 && !done[order[p]]) p--; if(p>=0){ setCells([order[p]],0); scrollToNext(true); } }
+function scrollToNext(smooth){
+  if(nextIdx<0||!cells[nextIdx]) return; const w=$('#gridWrap'), c=cells[nextIdx];
+  const top=c.offsetTop - w.clientHeight/2, left=c.offsetLeft - w.clientWidth/2;
+  w.scrollTo({top, left, behavior: smooth?'smooth':'auto'});
+}
+$('#bNext').onclick=markNext; $('#bRow').onclick=markRow; $('#bBack').onclick=back; $('#bUndo').onclick=undo; $('#bJump').onclick=()=>scrollToNext(true);
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); saveFile(); return; }
+  const tag=(e.target.tagName||'').toLowerCase(); if(['input','select','textarea'].includes(tag)) return;
+  if(!$('#tab-tpl').classList.contains('on')||!proj.grid) return;
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z'){ e.preventDefault(); undo(); }
+  else if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); markRow(); }
+  else if(e.key===' '||e.key==='Enter'){ e.preventDefault(); markNext(); }
+  else if(e.key==='Backspace'){ e.preventDefault(); back(); }
+});
+$('#zoom').oninput=e=>{ view.zoom=+e.target.value; lsSet('view',view); applyZoom(); };
+$('#showDots').onchange=e=>{ view.dots=e.target.checked; lsSet('view',view); const g=proj.grid; if(!g) return; for(let i=0;i<cells.length;i++) if(!isInk(i)) cells[i].textContent=view.dots?'·':' '; };
+
+/* ================= Export / Druck ================= */
+function download(name, data, type){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([data],{type})); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); }
+function svgFor(lines, G, pens, PL){
+  const esc=c=>c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+  const nP=pens&&PL? PL.length : 1;
+  const x0=G.mLeft+G.offX+G.cw/2, y0=G.mTop+G.offY+G.charH;
+  let t='';
+  for(let p=0;p<nP;p++){
+    let g='';
+    lines.forEach((ln,r)=>{ const xs=[],cs=[]; for(let c=0;c<ln.length;c++) if(ln[c]!==' ' && (!pens || +pens[r][c]===p)){ xs.push((x0+c*G.pitch).toFixed(2)); cs.push(esc(ln[c])); }
+      if(xs.length) g+=`<text x="${xs.join(' ')}" y="${(y0+r*G.lineH).toFixed(2)}">${cs.join('')}</text>\n`; });
+    if(g) t+= pens&&PL ? `<g id="stift${p+1}" data-name="${esc(PL[p].name)}" fill="${esc(PL[p].color)}">\n${g}</g>\n` : g;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${G.pw}mm" height="${G.ph}mm" viewBox="0 0 ${G.pw} ${G.ph}">
+<style>text{font-family:Arial,Helvetica,sans-serif;font-size:${(G.charH/0.716).toFixed(3)}px;text-anchor:middle}</style>
+<g fill="#000">
+${t}</g></svg>`;
+}
+function printSvg(lines, G, pens, PL){
+  $('#pageStyle').textContent=`@page{size:${G.pw}mm ${G.ph}mm;margin:0}`;
+  $('#print').innerHTML=svgFor(lines,G,pens,PL);
+  setTimeout(()=>window.print(),50);
+}
+$('#bPrint').onclick=()=>{ const g=proj.grid; if(g) printSvg(g.lines, g.geo, g.pens, g.penList); };
+$('#bPrintDraft').onclick=()=>{ if(!draft||!draft.lines) return; const s=proj.settings, L=draft.L; printSvg(draft.lines,{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH}, draft.pens, draft.penList); };
+$('#bTxt').onclick=()=>{
+  const g=proj.grid; if(!g) return;
+  const trim=a=>a.map(l=>l.replace(/ +$/,'')).join('\r\n');
+  let out;
+  if(!g.pens) out=trim(g.lines);
+  else out=penList().map((p,pi)=>`===== Stift ${pi+1}: ${p.name} (${p.color}) =====\r\n`+trim(g.lines.map((ln,r)=>[...ln].map((ch,c)=>+g.pens[r][c]===pi?ch:' ').join('')))).join('\r\n\r\n');
+  download(safeName(proj.name)+'_ASCII.txt', out, 'text/plain;charset=utf-8');
+};
+$('#bSvg').onclick=()=>{ const g=proj.grid; if(g) download(safeName(proj.name)+'_ASCII.svg', svgFor(g.lines, g.geo, g.pens, g.penList), 'image/svg+xml'); };
+
+/* ================= Datei speichern / laden ================= */
+async function saveFile(){
+  if(!proj) return; saveNow();
+  const data=JSON.stringify({app:'cadliner-ascii',version:1,saved:new Date().toISOString(),project:proj});
+  const name=safeName(proj.name)+'_Cadliner.json';
+  if(window.showSaveFilePicker){
+    try{
+      if(!fileHandle) fileHandle=await window.showSaveFilePicker({suggestedName:name,types:[{description:'Cadliner-ASCII-Projekt',accept:{'application/json':['.json']}}]});
+      const w=await fileHandle.createWritable(); await w.write(data); await w.close();
+      toast('Gespeichert: '+fileHandle.name); return;
+    }catch(e){ if(e.name==='AbortError') return; fileHandle=null; }
+  }
+  download(name,data,'application/json'); toast('Datei heruntergeladen');
+}
+$('#bSave').onclick=saveFile;
+$('#bLoad').onclick=()=>$('#fileLoad').click();
+$('#fileLoad').onchange=e=>{
+  const f=e.target.files[0]; e.target.value=''; if(!f) return;
+  f.text().then(t=>{
+    let o; try{ o=JSON.parse(t); }catch(err){ return toast('Datei nicht lesbar'); }
+    const p=o.project; if(!p||!p.id) return toast('Keine Cadliner-ASCII-Projektdatei');
+    const ex=lsGet('p:'+p.id);
+    if(ex && ex.updated>p.updated && !confirm('Im Browser liegt eine NEUERE Fassung dieses Projekts. Trotzdem mit der Datei überschreiben?')) return;
+    if(proj) saveNow();
+    openProject(p); saveNow(); toast('Projekt geladen');
+  });
+};
+$('#projSel').onchange=e=>{ saveNow(); const p=lsGet('p:'+e.target.value); if(p) openProject(p); };
+$('#projName').oninput=e=>{ proj.name=e.target.value||'Ohne Namen'; saveSoon(); };
+$('#bNew').onclick=()=>{ if(proj) saveNow(); openProject(newProject()); saveNow(); };
+$('#bDel').onclick=()=>{
+  if(!confirm(`Projekt „${proj.name}“ aus dem Browser löschen? Gespeicherte .json-Dateien bleiben erhalten.`)) return;
+  lsDel('p:'+proj.id); lsSet('index', index().filter(p=>p.id!==proj.id));
+  const nx=index()[0]; openProject(nx? lsGet('p:'+nx.id) : newProject()); saveNow();
+};
+window.addEventListener('beforeunload',()=>saveNow());
+
+/* ================= Start ================= */
+(function init(){
+  $('#zoom').value=view.zoom; $('#showDots').checked=view.dots;
+  const last=lsGet('last'); const p= last && lsGet('p:'+last);
+  openProject(p || newProject());
+  if(!p) saveNow();
+})();
+</script>
+</body>
+</html>
