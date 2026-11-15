@@ -9,6 +9,8 @@ Eine einzelne HTML-Datei, ohne Installation und ohne Internet: [`Cadliner_ASCII.
 ## Funktionen
 
 - **Papier & Schrift wie am Gerät:** Papierformat, Ränder, Schrifthöhe (1,0–25,4 mm), Breite (50–200 %), Buchstabenabstand (1/10 h) und Zeilenabstand. Spalten/Zeilen werden daraus berechnet.
+- **Monospace wie am Gerät:** Standard-Zeichenabstand = Schrifthöhe (Mitte bis Mitte, laut Anleitung) – feste Spalten. Alternativ Abstand über LETTER SPACE. Vorschau und Tinten-Dichte mit DIN-ähnlicher Engschrift (Bahnschrift Condensed / Arial Narrow).
+- **Hell auf dunkel:** Untergrund „Dunkel – helle Stifte“ mit frei wählbarer Papier- und Stiftfarbe; helle Bildstellen werden dicht beschrieben. Auch im Mehrfarbmodus (Mischung mit der echten Papierfarbe, Stiftvorschlag mit hellem Grundstift).
 - **Nur Zeichen, die das Gerät kann:** Groß-/Kleinbuchstaben, Ziffern, Satzzeichen einzeln wählbar, eigene Zeichen ergänzbar, Anzahl der Zeichenarten begrenzbar. Die Tinten-Dichte jedes Zeichens bestimmt den Grauwert.
 - **Tonwerte:** Helligkeit, Kontrast, Gamma, Schärfe, Hintergrund freistellen, Dithering, Autokontrast – mit Zurücksetzen-Button (Doppelklick setzt einzelne Regler zurück).
 - **Schreibfeld 185 × 40 mm:** Das Bild wird in Geräte-Felder geteilt; die App sagt, wann das Gerät umgesetzt werden muss.

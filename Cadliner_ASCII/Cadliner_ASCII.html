@@ -74,14 +74,14 @@ main{padding:0 16px 16px}
 .drop.picking{border-color:var(--accent);border-style:solid}
 .drop.picking img{max-height:none;cursor:crosshair}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}
-.chip{width:30px;height:38px;border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:3px 0 3px;font:15px Arial,Helvetica,sans-serif;cursor:pointer;user-select:none;background:var(--panel)}
+.chip{width:30px;height:38px;border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:3px 0 3px;font:16px "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;cursor:pointer;user-select:none;background:var(--panel)}
 .chip i{display:block;width:20px;height:3px;border-radius:2px;background:var(--g10);overflow:hidden}
 .chip i b{display:block;height:100%;background:var(--ink)}
 .chip.off{opacity:.35;border-style:dashed}
 .chip.on{border-color:var(--accent);background:var(--accent-soft)}
 .grp{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-top:6px}
 .grp a{color:var(--accent);cursor:pointer;margin-left:8px}
-.pal{font:16px/1.2 Arial,Helvetica,sans-serif;letter-spacing:3px;background:var(--g5);padding:6px 8px;border-radius:6px;word-break:break-all;white-space:pre-wrap}
+.pal{font:17px/1.2 "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;letter-spacing:3px;background:var(--g5);padding:6px 8px;border-radius:6px;word-break:break-all;white-space:pre-wrap}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:10px}
 .stat{background:var(--g5);border-radius:8px;padding:8px 10px}
 .stat b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
@@ -96,8 +96,8 @@ main{padding:0 16px 16px}
 .prog .bar b{display:block;height:100%;background:var(--done);width:0;transition:width .2s}
 .prog .txt{font-size:12px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
 .tbar label{display:flex;gap:5px;align-items:center;font-size:13px;color:var(--muted);white-space:nowrap}
-#gridWrap{overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--paper);max-height:calc(100vh - 360px);min-height:240px;position:relative}
-#grid{display:inline-block;color:var(--paper-ink);font-family:Arial,Helvetica,sans-serif;user-select:none;padding-bottom:6px}
+#gridWrap{overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--paper-ink);max-height:calc(100vh - 360px);min-height:240px;position:relative}
+#grid{display:inline-block;color:inherit;font-family:"Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;user-select:none;padding-bottom:6px}
 .gr{display:flex;height:var(--ch)}
 .gr.r5 .c{border-top:1px solid var(--pl5)}
 .gr.r10 .c{border-top:1px solid var(--pl10)}
@@ -121,10 +121,11 @@ main{padding:0 16px 16px}
 .ruler .rn{cursor:default;line-height:18px;background:var(--paper)}
 .ruler .rc{width:var(--cw);flex:none;font:10px/18px system-ui,sans-serif;color:var(--pmuted);text-align:left;overflow:visible;white-space:nowrap}
 .ruler .rc.k10{border-left:1px solid var(--pl10);padding-left:2px;color:var(--paper-ink)}
+#tab-tpl.darkp{--pl5:#3a3a3e;--pl10:#55555b;--pmuted:#9a9aa2;--pdone:#7fdca6;--pdone-bg:#1f3a2b;--pnext-bg:#5a4512}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 #writer{position:sticky;bottom:0;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;box-shadow:var(--shadow)}
 @media (max-width:760px){#writer{grid-template-columns:1fr}}
-#nextChar{width:76px;height:76px;border-radius:10px;background:var(--pnext-bg);color:var(--paper-ink);border:2px solid #f2a516;display:flex;align-items:center;justify-content:center;font:52px/1 Arial,Helvetica,sans-serif}
+#nextChar{width:76px;height:76px;border-radius:10px;background:var(--pnext-bg);color:var(--paper-ink);border:2px solid #f2a516;display:flex;align-items:center;justify-content:center;font:52px/1 "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif}
 #penNow{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--ink)}
 .sw{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.25);vertical-align:-2px}
 .penrow{display:grid;grid-template-columns:auto 38px 1fr auto auto;gap:6px;align-items:center;margin:5px 0}
@@ -134,7 +135,7 @@ main{padding:0 16px 16px}
 #nextInfo{font-size:13px;color:var(--muted)}
 #nextInfo b{color:var(--ink);font-variant-numeric:tabular-nums}
 #strip{display:flex;gap:2px;overflow-x:auto;margin-top:6px;padding-bottom:3px;scroll-behavior:smooth}
-#strip span{flex:none;width:22px;height:30px;border-radius:4px;background:var(--paper);color:var(--paper-ink);display:flex;align-items:center;justify-content:center;font:18px Arial,Helvetica,sans-serif}
+#strip span{flex:none;width:22px;height:30px;border-radius:4px;background:var(--paper);color:var(--paper-ink);display:flex;align-items:center;justify-content:center;font:19px "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif}
 #strip span.s{background:transparent;color:var(--g10)}
 #strip span.o{opacity:.18}
 #strip span.d{background:var(--pdone-bg);opacity:.5}
@@ -229,16 +230,20 @@ body.px .penrow .no{font-size:15px;color:var(--ink);width:18px;text-align:center
      <div class="row"><label>Breite × Höhe</label><input type="number" data-k="pw" step="1" min="20"> × <input type="number" data-k="ph" step="1" min="20"><span class="unit">mm</span></div>
      <div class="row"><label>Rand oben/unten</label><input type="number" data-k="mTop" step="1" min="0"><input type="number" data-k="mBottom" step="1" min="0"><span class="unit">mm</span></div>
      <div class="row"><label>Rand links/rechts</label><input type="number" data-k="mLeft" step="1" min="0"><input type="number" data-k="mRight" step="1" min="0"><span class="unit">mm</span></div>
+     <div class="row"><label>Untergrund</label><select id="bgPreset"><option value="light">Hell – dunkle Stifte</option><option value="dark">Dunkel – helle Stifte</option></select></div>
+     <div class="row"><label>Papierfarbe</label><input type="color" data-k="paperColor" style="width:44px;height:28px;padding:0 2px"><label style="min-width:0">Stift</label><input type="color" data-k="inkColor" style="width:44px;height:28px;padding:0 2px"></div>
+     <p class="hint" id="bgHint"></p>
    </div></details>
 
    <details open class="m-cad"><summary>Schrift (Cadliner)</summary><div class="body">
      <div class="row"><label>Schrifthöhe</label><select id="hPreset"></select><input type="number" data-k="charH" step="0.1" min="1" max="25.4"><span class="unit">mm (1,0–25,4)</span></div>
      <div class="row"><label></label><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="linked"> wie am Gerät einstellen</label></div>
      <div id="devRow">
+       <div class="row"><label>Zeichenabstand</label><select data-k="spacing" style="flex:1"><option value="mono">Monospace – Mitte bis Mitte = Schrifthöhe</option><option value="prop">über Buchstabenabstand (LETTER SPACE)</option></select></div>
        <div class="row"><label>Breite</label><input type="number" data-k="widthPct" step="1" min="50" max="200"><span class="unit">% (50–200)</span></div>
-       <div class="row"><label>Buchstabenabstand</label><input type="number" data-k="letterSpace" step="1" min="0" max="20"><span class="unit">/10 h (LETTER SPACE)</span></div>
+       <div class="row" id="lsRow"><label>Buchstabenabstand</label><input type="number" data-k="letterSpace" step="1" min="0" max="20"><span class="unit">/10 h (LETTER SPACE)</span></div>
        <div class="row"><label>Zeilenabstand</label><input type="number" data-k="lineRatio" step="0.05" min="1"><span class="unit">× h (Grundlinie–Grundlinie)</span></div>
-       <div class="row"><label>Grundbreite</label><input type="number" data-k="baseW" step="0.01" min="0.3" max="1.2"><span class="unit">× h bei 100 % (Kalibrierung)</span></div>
+       <div class="row"><label>Grundbreite</label><input type="number" data-k="baseW" step="0.01" min="0.3" max="1.2"><span class="unit">× h bei 100 % (Engschrift ≈ 0,5)</span></div>
      </div>
      <div class="row"><label>Zeichenabstand</label><input type="number" data-k="pitch" step="0.05" min="0.3"><span class="unit">mm (Mitte–Mitte)</span></div>
      <div class="row"><label>Zeilenabstand</label><input type="number" data-k="lineH" step="0.05" min="0.3"><span class="unit">mm</span></div>
@@ -270,7 +275,7 @@ body.px .penrow .no{font-size:15px;color:var(--ink);width:18px;text-align:center
        <div id="penList"></div>
        <p class="hint" id="pickHint" style="display:none;color:var(--accent)">💧 Pipette aktiv: oben ins Bild klicken, um die Farbe zu übernehmen (Klick daneben = abbrechen).</p>
        <div class="row"><select id="penAdd"></select><button id="bPenAuto" title="Ermittelt passende Farben aus dem Bild – danach an deine echten Stifte anpassen">Farben aus Bild vorschlagen</button></div>
-       <div class="row m-cad"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="keepBlack"> Schwarz beim Vorschlag immer als Stift 1</label></div>
+       <div class="row m-cad"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="keepBlack"> <span id="keepBlackTxt">Schwarz beim Vorschlag immer als Stift 1</span></label></div>
        <div class="row m-px"><label style="min-width:0;color:var(--ink)"><input type="checkbox" data-k="dmcSnap"> Vorschläge als DMC-Garne</label><button id="bDmcAll" title="Jede Farbe durch das nächstliegende DMC-Garn ersetzen">Alle auf DMC runden</button></div>
        <datalist id="dmcDl"></datalist>
        <p class="hint m-px">DMC-Nummer ins Namensfeld tippen (z. B. „310“), dann wird die Garnfarbe übernommen. Bildschirmfarben sind Näherungen.</p>
@@ -357,6 +362,8 @@ body.px .penrow .no{font-size:15px;color:var(--ink);width:18px;text-align:center
     <li><b>Schreibfeld 185 × 40 mm:</b> Pro Geräteposition passt nur ein Feld. Die blauen Linien zeigen, wo du das Gerät umsetzen musst. Bei „Feld für Feld“ führt dich die Schreibleiste durch ein Feld nach dem anderen und meldet, wann umgesetzt werden muss.</li>
     <li><b>Monitor-Modus:</b> Laut Anleitung puffert das Gerät bis zu 200 Tastenanschläge. Du kannst eine Zeile also erst ins LCD tippen, prüfen und dann schreiben lassen. Danach in der App <kbd>Strg</kbd>+<kbd>Enter</kbd> drücken = Zeile fertig.</li>
     <li><b>Kleinbuchstaben</b> sind Modus I, Großbuchstaben Modus II. Wer nicht ständig umschalten will, schaltet eine Gruppe im Zeichensatz einfach ab.</li>
+    <li><b>Zeichenabstand:</b> Standard ist <b>Monospace</b> – laut Anleitung ist der Abstand der Buchstabenmitten dann gleich der Schrifthöhe, alle Zeichen stehen in festen Spalten. Das passt am besten zur ASCII-Vorlage. Die Gerätschrift ist eine DIN-ähnliche Engschrift; Vorschau und Tinten-Dichte nutzen deshalb eine Engschrift (Bahnschrift Condensed bzw. Arial Narrow, falls vorhanden).</li>
+    <li><b>Helle Stifte auf dunklem Papier:</b> Unter „Papier → Untergrund“ auf „Dunkel – helle Stifte“ stellen und Papier- und Stiftfarbe anpassen. Dann werden helle Bildstellen dicht beschrieben und dunkle bleiben frei. Im Mehrfarbmodus rechnet die App die Mischung mit der echten Papierfarbe; „Farben aus Bild vorschlagen“ setzt den hellen Stift als Stift 1.</li>
     <li><b>Kursiv / Neigung</b> am Gerät auf 90° lassen, sonst passen die Spalten nicht mehr übereinander.</li>
     <li><b>Mehrfarbig:</b> Unter „Farben (Stifte)“ die echten Stiftfarben eintragen. Die Schreibleiste zeigt immer den aktiven Stift und meldet „Stift wechseln“. Mit „Zeigen: nur aktueller Stift“ blendet die Vorlage alle anderen Farben ab – so siehst du nur, was mit dem eingesetzten Stift noch zu tun ist. Beim Stiftwechsel das Gerät nicht verschieben; am besten erst alle Farben eines Felds, dann umsetzen.</li>
   </ul>
@@ -400,6 +407,7 @@ const PEN_PRESETS = [
   {name:'Schwarz',color:'#1a1a1a'},{name:'Rot',color:'#d42a2a'},{name:'Blau',color:'#1f4fbf'},{name:'Grün',color:'#1d8a3c'},
   {name:'Braun',color:'#7a4a22'},{name:'Orange',color:'#f07a12'},{name:'Violett',color:'#7a3aa8'},{name:'Gelb',color:'#f2c512'},
   {name:'Hellblau',color:'#3aa3e0'},{name:'Rosa',color:'#e36aa8'},{name:'Grau',color:'#8a8a8a'},
+  {name:'Weiß',color:'#f4f4f0'},{name:'Silber',color:'#c4c6c8'},{name:'Gold',color:'#d4af37'},
 ];
 const MAX_PENS = 8, MAX_YARNS = 40;
 /* Kreuzstich / Pixel: Stoffe und Raster (Kästchengröße in mm) */
@@ -425,7 +433,8 @@ const SYMBOLS = ['×','●','○','■','□','▲','△','◆','◇','★','☆
 const PAPERS = {A5:[148,210],A4:[210,297],A3:[297,420],A2:[420,594],Letter:[216,279]};
 const DEFAULTS = {
   paper:'A4', orient:'portrait', pw:210, ph:297, mTop:15, mBottom:15, mLeft:20, mRight:15,
-  charH:2.5, pitch:2, lineH:4, linked:true, widthPct:100, letterSpace:2, baseW:0.6, lineRatio:1.6,
+  charH:2.5, pitch:2.5, lineH:4, linked:true, spacing:'mono', widthPct:100, letterSpace:2, baseW:0.5, lineRatio:1.6,
+  paperColor:'#ffffff', inkColor:'#1a1a1a',
   fieldW:185, fieldH:40, order:'field', colorMode:false, keepBlack:true,
   fit:'fit', scale:100, brightness:0, contrast:0.1, gamma:1, sharpen:0.4, bgCut:0.04,
   dither:'fs', autoLevels:true, invert:false, levels:40, secPerChar:4,
@@ -485,6 +494,7 @@ function fillProjSel(){
 }
 function openProject(p){
   proj=p; fileHandle=null; undoStack=[];
+  if(proj.settings && !('spacing' in proj.settings)) Object.assign(proj.settings,{spacing:'prop', baseW:proj.settings.baseW||0.6});
   proj.settings=Object.assign({},DEFAULTS,proj.settings||{});
   proj.log=proj.log||{}; proj.extra=proj.extra||'';
   if(!proj.pens||!proj.pens.length) proj.pens=[{...PEN_PRESETS[0]}];
@@ -514,7 +524,12 @@ function syncInputs(){
   $('[data-k=pitch]').disabled=s.linked; $('[data-k=lineH]').disabled=s.linked;
   $('#devRow').style.display=s.linked?'':'none';
   const cw=charW(s);
-  $('#fontHint').textContent=`Zeichenbreite ≈ ${fmt(cw,2)} mm, Lücke ≈ ${fmt(Math.max(0,s.pitch-cw),2)} mm.`;
+  $('#fontHint').textContent=`Zeichenbreite ≈ ${fmt(cw,2)} mm, Lücke ≈ ${fmt(Math.max(0,s.pitch-cw),2)} mm.`+(s.linked&&s.spacing==='mono'&&s.widthPct!=100?' Breite ≠ 100 %: im Monospace-Modus Abstand am Gerät nachmessen.':'');
+  $('#lsRow').style.display = s.spacing==='mono' ? 'none' : '';
+  const dark=paperDark(s);
+  $('#bgPreset').value = dark ? 'dark' : 'light';
+  $('#bgHint').textContent = dark ? 'Helle Stifte auf dunklem Papier: Helle Bildstellen werden dicht beschrieben, dunkle bleiben frei.' : '';
+  $('#keepBlackTxt').textContent = dark ? 'Stiftfarbe (hell) beim Vorschlag immer als Stift 1' : 'Schwarz beim Vorschlag immer als Stift 1';
   $('#extraChars').value=proj.extra||'';
   const px=s.mode==='pixel';
   document.body.classList.toggle('px',px);
@@ -529,6 +544,8 @@ function syncInputs(){
   $('[data-k=pxBlock]').disabled = s.pxOrder!=='field';
 }
 const isPx = () => proj && proj.settings.mode==='pixel';
+const CADFONT = '"Bahnschrift Condensed", Bahnschrift, "DIN Condensed", "Arial Narrow", Arial, sans-serif';
+const paperDark = s => { const p=hexRgb(s.paperColor), k=hexRgb(s.inkColor); return lum(...p) < lum(...k); };
 const curPal = () => isPx() ? proj.yarns : proj.pens;
 const cellMm = s => (FABRICS[s.fabric]&&FABRICS[s.fabric].mm) || s.cellMm || 2;
 const pc = (str,c) => str.charCodeAt(c)-48;      // Stift-/Farbindex aus Zeichenkette (0 = '0')
@@ -541,8 +558,9 @@ function applyRules(k){
   if(k==='mode' && s.mode==='pixel' && img && !proj.yarns.length) autoYarns(true);
   if(k==='mode') buildPenList();
   if(k==='paper'||k==='orient'){ if(s.paper!=='custom'){ let [w,h]=PAPERS[s.paper]; if(s.orient==='landscape') [w,h]=[h,w]; s.pw=w; s.ph=h; } else if(k==='orient'){ if((s.orient==='landscape')!==(s.pw>s.ph)) [s.pw,s.ph]=[s.ph,s.pw]; } }
-  if(s.linked && ['charH','linked','widthPct','letterSpace','baseW','lineRatio'].includes(k)){
-    s.pitch=+(s.charH*(s.baseW*s.widthPct/100 + s.letterSpace/10)).toFixed(2);
+  if(s.linked && ['charH','linked','spacing','widthPct','letterSpace','baseW','lineRatio'].includes(k)){
+    // Monospace laut Anleitung: Abstand der Buchstabenmitten = Schrifthöhe
+    s.pitch= s.spacing==='mono' ? +s.charH.toFixed(2) : +(s.charH*(s.baseW*s.widthPct/100 + s.letterSpace/10)).toFixed(2);
     s.lineH=+(s.charH*s.lineRatio).toFixed(2);
   }
 }
@@ -569,6 +587,10 @@ document.addEventListener('dblclick',e=>{
   const el=e.target; if(el.type!=='range'||!el.dataset.k||!proj||!(el.dataset.k in DEFAULTS)) return;
   proj.settings[el.dataset.k]=toneDef(el.dataset.k); syncInputs(); recompute(); saveSoon();
 });
+$('#bgPreset').onchange=e=>{ const s=proj.settings;
+  if(e.target.value==='dark'){ s.paperColor='#1c1c1e'; s.inkColor='#f4f4f0'; if(proj.pens.length && hexRgb(proj.pens[0].color).every(v=>v<0.3)) proj.pens[0]={name:'Weiß',color:'#f4f4f0'}; }
+  else { s.paperColor='#ffffff'; s.inkColor='#1a1a1a'; if(proj.pens.length && proj.pens[0].name==='Weiß') proj.pens[0]={...PEN_PRESETS[0]}; }
+  buildPenList(); syncInputs(); recompute(); saveSoon(); };
 $('#hPreset').onchange=e=>{ if(!e.target.value) return; proj.settings.charH=+e.target.value; applyRules('charH'); syncInputs(); recompute(); saveSoon(); };
 
 /* ================= Stifte ================= */
@@ -659,7 +681,7 @@ function coverage(ch){
   const cv=coverage.cv||(coverage.cv=Object.assign(document.createElement('canvas'),{width:100,height:100}));
   const x=cv.getContext('2d',{willReadFrequently:true});
   x.clearRect(0,0,100,100);
-  const S=64; x.font=`${S}px Arial, Helvetica, sans-serif`; x.textAlign='center'; x.textBaseline='alphabetic';
+  const S=64; x.font=`${S}px ${CADFONT}`; x.textAlign='center'; x.textBaseline='alphabetic';
   x.fillStyle='#000'; x.strokeStyle='#000'; x.lineJoin='round'; x.lineCap='round'; x.lineWidth=S*0.716*0.08;
   x.fillText(ch,50,76); x.strokeText(ch,50,76);
   const d=x.getImageData(0,0,100,100).data; let s=0; for(let i=3;i<d.length;i+=4) s+=d[i];
@@ -758,10 +780,11 @@ function sharpenArr(A, cols, rows, stride, amt){
 function sampleDarkness(im, s, L){
   const {cols,rows}=L, R=sampleRGB(im,s,L), D=new Float32Array(cols*rows);
   const cf=Math.tan((s.contrast+1)*Math.PI/4);
-  for(let i=0;i<D.length;i++) D[i]=1-adjust(lum(R[i*3],R[i*3+1],R[i*3+2]),s,cf);
+  const dark=paperDark(s); // helle Stifte auf dunklem Papier: Deckung = Helligkeit
+  for(let i=0;i<D.length;i++){ const t=adjust(lum(R[i*3],R[i*3+1],R[i*3+2]),s,cf); D[i]= dark ? t : 1-t; }
   if(s.autoLevels){ const srt=Float32Array.from(D).sort(); const lo=srt[Math.floor(srt.length*0.01)], hi=srt[Math.floor(srt.length*0.99)]; if(hi-lo>0.05) for(let i=0;i<D.length;i++) D[i]=clamp((D[i]-lo)/(hi-lo),0,1); }
   if(s.sharpen>0) sharpenArr(D,cols,rows,1,s.sharpen);
-  if(s.bgCut>0) for(let i=0;i<D.length;i++) if(D[i]<s.bgCut) D[i]=0;
+  if(s.bgCut>0) for(let i=0;i<D.length;i++) if(D[i]<s.bgCut) D[i]=0;   // fast papierfarbene Stellen bleiben frei
   return D;
 }
 function sampleColor(im, s, L){ // bearbeitete Farbe je Zelle (Helligkeit 1 = Papierweiß)
@@ -774,7 +797,9 @@ function sampleColor(im, s, L){ // bearbeitete Farbe je Zelle (Helligkeit 1 = Pa
     if(hi-lo>0.05) for(let i=0;i<C.length;i++) C[i]=clamp((C[i]-lo)/(hi-lo),0,1);
   }
   if(s.sharpen>0) sharpenArr(C,cols,rows,3,s.sharpen);
-  if(s.bgCut>0) for(let i=0;i<n;i++) if(1-lum(C[i*3],C[i*3+1],C[i*3+2])<s.bgCut){ C[i*3]=C[i*3+1]=C[i*3+2]=1; }
+  if(s.bgCut>0){ // Stellen nahe der Papier-/Stofffarbe (Helligkeit) → Papier
+    const P=s.mode==='pixel'? hexRgb(s.fabricColor) : hexRgb(s.paperColor), Lp=lum(...P);
+    for(let i=0;i<n;i++) if(Math.abs(Lp-lum(C[i*3],C[i*3+1],C[i*3+2]))<s.bgCut){ C[i*3]=P[0]; C[i*3+1]=P[1]; C[i*3+2]=P[2]; } }
   return C;
 }
 function mapChars(D, cols, rows, pal, dither){
@@ -796,11 +821,11 @@ function mapChars(D, cols, rows, pal, dither){
 const hexRgb=h=>{ const m=/^#?([0-9a-f]{6})$/i.exec(h||''); const v=m?parseInt(m[1],16):0x1a1a1a; return [(v>>16&255)/255,(v>>8&255)/255,(v&255)/255]; };
 /* Farbmodus: je Zelle die Kombination aus Stift und Zeichen wählen, deren Mischung
    (Papierweiß × (1 − Deckung) + Stiftfarbe × Deckung) der Bildfarbe am nächsten kommt. */
-function mapColor(C, cols, rows, pal, pens, dither){
-  const P=pens.map(p=>hexRgb(p.color)), cand=[];
+function mapColor(C, cols, rows, pal, pens, dither, paper){
+  const P=pens.map(p=>hexRgb(p.color)), W=hexRgb(paper||'#ffffff'), cand=[];
   for(const q of pal){
-    if(q.c===' '){ cand.push({c:' ',p:0,r:1,g:1,b:1}); continue; }
-    P.forEach((rgb,pi)=>cand.push({c:q.c,p:pi,r:1-(1-rgb[0])*q.v,g:1-(1-rgb[1])*q.v,b:1-(1-rgb[2])*q.v}));
+    if(q.c===' '){ cand.push({c:' ',p:0,r:W[0],g:W[1],b:W[2]}); continue; }
+    P.forEach((rgb,pi)=>cand.push({c:q.c,p:pi,r:W[0]+(rgb[0]-W[0])*q.v,g:W[1]+(rgb[1]-W[1])*q.v,b:W[2]+(rgb[2]-W[2])*q.v}));
   }
   const E=Float32Array.from(C), lines=new Array(rows), penLines=new Array(rows);
   const add=(r,c,er,eg,eb,f)=>{ if(r<rows&&c>=0&&c<cols){ const i=(r*cols+c)*3; E[i]+=er*f; E[i+1]+=eg*f; E[i+2]+=eb*f; } };
@@ -842,13 +867,16 @@ function suggestPens(k, keepBlack){
   if(!img) return null;
   const s=proj.settings, L=layout(s,img), C=sampleColor(img,s,L);
   const n=C.length/3, step=Math.max(1,Math.floor(n/5000)), pts=[];
-  for(let i=0;i<n;i+=step){ const d=[1-C[i*3],1-C[i*3+1],1-C[i*3+2]].map(v=>Math.max(0,v)); if(Math.hypot(...d)>=0.04) pts.push(d); }
+  const PW=hexRgb(s.paperColor); // alle Töne eines Stifts liegen auf der Strecke Papier → Stift; d = Papier − Farbe
+  const dk=lum(...PW)<0.5; // dunkles Papier: nur Aufhellen ist sinnvoll, hell: nur Abdunkeln
+  for(let i=0;i<n;i+=step){ const d=[PW[0]-C[i*3],PW[1]-C[i*3+1],PW[2]-C[i*3+2]].map(v=>dk?Math.min(0,v):Math.max(0,v)); if(Math.hypot(...d)>=0.04) pts.push(d); }
   if(!pts.length) return null;
   const W=[2,4,3], wd=(a,b)=>W[0]*a[0]*b[0]+W[1]*a[1]*b[1]+W[2]*a[2]*b[2];
   const norm=v=>{ const m=Math.hypot(...v)||1; return v.map(x=>x/m); };
   const errTo=(d,q,qq)=>{ const t=clamp(wd(d,q)/qq,0,1); const e0=d[0]-t*q[0], e1=d[1]-t*q[1], e2=d[2]-t*q[2]; return W[0]*e0*e0+W[1]*e1*e1+W[2]*e2*e2; };
-  const strong=(u,M)=>{ const Mmax=1/Math.max(...u); return u.map(v=>v*clamp(M==null?0.9*Mmax:M,0,Mmax)); };
-  const BLACK=[0.9,0.9,0.9]; // #1a1a1a
+  const mmax=u=>Math.min(...u.map((v,j)=> v>1e-6 ? PW[j]/v : v<-1e-6 ? (PW[j]-1)/v : Infinity));   // Stift muss im Farbraum bleiben
+  const strong=(u,M)=>{ const Mmax=mmax(u); return u.map(v=>v*clamp(M==null?0.9*Mmax:M,0,Mmax)); };
+  const ink=hexRgb(s.inkColor), BLACK=[PW[0]-ink[0],PW[1]-ink[1],PW[2]-ink[2]]; // Grundstift (Schwarz bzw. Weiß auf dunklem Papier)
   // Kandidaten: häufige Farbrichtungen im Bild, kräftig gemacht
   const bins=new Map();
   for(const d of pts){ const u=norm(d), key=u.map(v=>Math.round(v*7)).join(','); const b=bins.get(key)||{n:0,s:[0,0,0]}; b.n++; for(let j=0;j<3;j++) b.s[j]+=u[j]; bins.set(key,b); }
@@ -874,11 +902,11 @@ function suggestPens(k, keepBlack){
       const sum=[0,0,0]; let cnt=0; pts.forEach((d,i)=>{ if(assign[i]===pi){ sum[0]+=d[0]; sum[1]+=d[1]; sum[2]+=d[2]; cnt++; } });
       if(!cnt) return;
       const u=norm(sum), t=[]; pts.forEach((d,i)=>{ if(assign[i]===pi) t.push(d[0]*u[0]+d[1]*u[1]+d[2]*u[2]); }); t.sort((a,b)=>a-b);
-      const Mmax=1/Math.max(...u); pens[pi]=strong(u, Math.max(t[Math.floor(t.length*0.95)], 0.85*Mmax));
+      const Mmax=mmax(u); pens[pi]=strong(u, Math.max(t[Math.floor(t.length*0.95)], 0.85*Mmax));
     });
   }
   const cnt=pens.map((_,pi)=>assign.reduce((a,v)=>a+(v===pi),0));
-  const hex=d=>'#'+d.map(x=>Math.round(clamp(1-x,0,1)*255).toString(16).padStart(2,'0')).join('');
+  const hex=d=>'#'+d.map((x,j)=>Math.round(clamp(PW[j]-x,0,1)*255).toString(16).padStart(2,'0')).join('');
   return pens.map((q,pi)=>({hex:hex(q),n:cnt[pi],black:fixed[pi]}))
              .filter(o=>o.n>0||o.black)
              .sort((a,b)=>(b.black-a.black)||(b.n-a.n)).map(o=>o.hex);
@@ -957,7 +985,7 @@ function recomputeNow(){
   $('#palOut').textContent = pal.map(p=>p.c===' '?'␣':p.c).join('');
   let lines=null, pens=null;
   const color = s.colorMode && proj.pens.length>0;
-  if(img && color){ const C=sampleColor(img,s,L); ({lines,pens}=mapColor(C,L.cols,L.rows,pal,proj.pens,s.dither)); }
+  if(img && color){ const C=sampleColor(img,s,L); ({lines,pens}=mapColor(C,L.cols,L.rows,pal,proj.pens,s.dither,s.paperColor)); }
   else if(img){ const D=sampleDarkness(img,s,L); lines=mapChars(D,L.cols,L.rows,pal,s.dither); }
   draft={L,lines,pal,pens,penList: color? proj.pens.map(p=>({...p})) : null};
   const ink = lines ? lines.reduce((n,l)=>n+l.replace(/ /g,'').length,0) : 0;
@@ -1017,7 +1045,7 @@ function drawPreview(){
   const W=Math.round(s.pw*sc), H=Math.round(s.ph*sc);
   cv.style.width=W+'px'; cv.style.height=H+'px'; cv.width=W*dpr; cv.height=H*dpr;
   const x=cv.getContext('2d'); x.setTransform(dpr*sc,0,0,dpr*sc,0,0);
-  x.fillStyle='#fffefa'; x.fillRect(0,0,s.pw,s.ph);
+  x.fillStyle=s.paperColor; x.fillRect(0,0,s.pw,s.ph);
   x.strokeStyle='#c9c6bc'; x.lineWidth=0.4; x.setLineDash([2,2]); x.strokeRect(s.mLeft,s.mTop,L.aw,L.ah); x.setLineDash([]);
   if(draft.lines && (L.nFx>1||L.nFy>1)){ // Geräte-Felder
     x.strokeStyle='rgba(47,111,222,.55)'; x.lineWidth=0.35; const bx=s.mLeft+L.offX, by=s.mTop+L.offY;
@@ -1025,7 +1053,7 @@ function drawPreview(){
     for(let j=1;j<L.nFy;j++){ const yy=by+j*L.fRows*s.lineH-(s.lineH-s.charH)/2; x.beginPath(); x.moveTo(bx,yy); x.lineTo(bx+L.usedW,yy); x.stroke(); }
   }
   if(!draft.lines){ x.fillStyle='#999'; x.font='8px system-ui'; x.textAlign='center'; x.fillText('Bild laden',s.pw/2,s.ph/2); return; }
-  x.fillStyle='#1a1a1a'; x.font=`${s.charH/0.716}px Arial, Helvetica, sans-serif`; x.textAlign='center'; x.textBaseline='alphabetic';
+  x.fillStyle=s.inkColor; x.font=`${s.charH/0.716}px ${CADFONT}`; x.textAlign='center'; x.textBaseline='alphabetic';
   const x0=s.mLeft+L.offX+L.cw/2, y0=s.mTop+L.offY+s.charH;
   const cols = draft.penList ? draft.penList.map(p=>p.color) : null;
   draft.lines.forEach((ln,r)=>{ for(let c=0;c<ln.length;c++){ const ch=ln[c]; if(ch===' ') continue; if(cols) x.fillStyle=cols[pc(draft.pens[r],c)]; x.fillText(ch, x0+c*s.pitch, y0+r*s.lineH); } });
@@ -1094,7 +1122,8 @@ $('#bCommit').onclick=()=>{
     pens: draft.pens? draft.pens.slice() : null, penList: draft.penList? draft.penList.map(p=>({...p})) : null,
     geo:{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH,
          fCols:L.fCols,fRows:L.fRows,order:s.order,
-         dev:s.linked?{h:s.charH,width:s.widthPct,space:s.letterSpace}:null} };
+         paperColor:s.paperColor, inkColor:s.inkColor,
+         dev:s.linked?{h:s.charH,width:s.widthPct,space:s.spacing==='mono'?'mono':s.letterSpace}:null} };
   done=new Uint8Array(L.cols*L.rows); undoStack=[];
   saveNow(); buildGrid(); showTab('tpl'); toast('Vorlage übernommen');
 };
@@ -1117,12 +1146,16 @@ function buildGrid(){
   const el=$('#grid'); el.innerHTML=''; cells=[]; rowEls=[];
   const g=proj&&proj.grid;
   $('#writer').style.display=g?'':'none';
+  { const tt=$('#tab-tpl'); tt.style.removeProperty('--paper'); tt.style.removeProperty('--paper-ink'); tt.classList.remove('darkp'); }
   fillPenView();
   if(!g){ el.innerHTML='<div class="empty">Noch keine Vorlage. Unter „1 · Einrichten“ ein Bild laden und „Als Vorlage übernehmen“ klicken.</div>'; updateProgress(); return; }
   applyZoom();
   el.classList.toggle('colored', !!g.pens);
   el.classList.toggle('px', g.mode==='pixel'); applyPxShow();
   $('#tab-tpl').classList.toggle('gpx', g.mode==='pixel');
+  const tt=$('#tab-tpl'), cad=g.mode!=='pixel' && !!g.geo.paperColor, dk=cad && lum(...hexRgb(g.geo.paperColor))<0.5;
+  tt.style.setProperty('--paper', cad ? g.geo.paperColor : ''); tt.style.setProperty('--paper-ink', cad ? g.geo.inkColor : '');
+  tt.classList.toggle('darkp', dk);
   $('#bPrint').textContent = g.mode==='pixel' ? 'Muster drucken' : '1:1 drucken';
   const PL=penList();
   const frag=document.createDocumentFragment();
@@ -1303,8 +1336,9 @@ function svgFor(lines, G, pens, PL){
     if(g) t+= pens&&PL ? `<g id="stift${p+1}" data-name="${esc(PL[p].name)}" fill="${esc(PL[p].color)}">\n${g}</g>\n` : g;
   }
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${G.pw}mm" height="${G.ph}mm" viewBox="0 0 ${G.pw} ${G.ph}">
-<style>text{font-family:Arial,Helvetica,sans-serif;font-size:${(G.charH/0.716).toFixed(3)}px;text-anchor:middle}</style>
-<g fill="#000">
+<style>text{font-family:${CADFONT.replace(/"/g,"'")};font-size:${(G.charH/0.716).toFixed(3)}px;text-anchor:middle}</style>
+${G.paperColor && lum(...hexRgb(G.paperColor))<0.9 ? `<rect id="papier" width="100%" height="100%" fill="${G.paperColor}"/>` : ''}
+<g fill="${G.inkColor||'#000'}">
 ${t}</g></svg>`;
 }
 function printSvg(lines, G, pens, PL){
@@ -1380,7 +1414,7 @@ $('#bPrint').onclick=()=>{ const g=proj.grid; if(!g) return;
   if(g.mode==='pixel') return printPattern(g.lines, g.pens, g.penList, {fabric:g.geo.fabric, fabricColor:g.geo.fabricColor, w:g.geo.pw, h:g.geo.ph});
   printSvg(g.lines, g.geo, g.pens, g.penList); };
 $('#bPrintDraft').onclick=()=>{ if(!draft||!draft.lines) return; const s=proj.settings, L=draft.L;
-  if(draft.px) return printPattern(draft.lines, draft.pens, draft.penList, {fabric:(FABRICS[s.fabric]||{}).name, fabricColor:s.fabricColor, w:L.usedW, h:L.usedH}); printSvg(draft.lines,{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH}, draft.pens, draft.penList); };
+  if(draft.px) return printPattern(draft.lines, draft.pens, draft.penList, {fabric:(FABRICS[s.fabric]||{}).name, fabricColor:s.fabricColor, w:L.usedW, h:L.usedH}); printSvg(draft.lines,{pw:s.pw,ph:s.ph,mLeft:s.mLeft,mTop:s.mTop,offX:L.offX,offY:L.offY,cw:L.cw,charH:s.charH,pitch:s.pitch,lineH:s.lineH,paperColor:s.paperColor,inkColor:s.inkColor}, draft.pens, draft.penList); };
 $('#bTxt').onclick=()=>{
   const g=proj.grid; if(!g) return;
   const trim=a=>a.map(l=>l.replace(/ +$/,'')).join('\r\n');
