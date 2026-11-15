@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cadliner ASCII</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400&display=swap">
 <style id="pageStyle">@page{size:210mm 297mm;margin:0}</style>
 <style>
 :root{
@@ -74,14 +76,14 @@ main{padding:0 16px 16px}
 .drop.picking{border-color:var(--accent);border-style:solid}
 .drop.picking img{max-height:none;cursor:crosshair}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}
-.chip{width:30px;height:38px;border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:3px 0 3px;font:16px "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;cursor:pointer;user-select:none;background:var(--panel)}
+.chip{width:30px;height:38px;border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:3px 0 3px;font:16px "Barlow Condensed","Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;cursor:pointer;user-select:none;background:var(--panel)}
 .chip i{display:block;width:20px;height:3px;border-radius:2px;background:var(--g10);overflow:hidden}
 .chip i b{display:block;height:100%;background:var(--ink)}
 .chip.off{opacity:.35;border-style:dashed}
 .chip.on{border-color:var(--accent);background:var(--accent-soft)}
 .grp{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-top:6px}
 .grp a{color:var(--accent);cursor:pointer;margin-left:8px}
-.pal{font:17px/1.2 "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;letter-spacing:3px;background:var(--g5);padding:6px 8px;border-radius:6px;word-break:break-all;white-space:pre-wrap}
+.pal{font:17px/1.2 "Barlow Condensed","Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;letter-spacing:3px;background:var(--g5);padding:6px 8px;border-radius:6px;word-break:break-all;white-space:pre-wrap}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:10px}
 .stat{background:var(--g5);border-radius:8px;padding:8px 10px}
 .stat b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
@@ -97,7 +99,7 @@ main{padding:0 16px 16px}
 .prog .txt{font-size:12px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums}
 .tbar label{display:flex;gap:5px;align-items:center;font-size:13px;color:var(--muted);white-space:nowrap}
 #gridWrap{overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--paper-ink);max-height:calc(100vh - 360px);min-height:240px;position:relative}
-#grid{display:inline-block;color:inherit;font-family:"Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;user-select:none;padding-bottom:6px}
+#grid{display:inline-block;color:inherit;font-family:"Barlow Condensed","Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif;user-select:none;padding-bottom:6px}
 .gr{display:flex;height:var(--ch)}
 .gr.r5 .c{border-top:1px solid var(--pl5)}
 .gr.r10 .c{border-top:1px solid var(--pl10)}
@@ -125,7 +127,7 @@ main{padding:0 16px 16px}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 #writer{position:sticky;bottom:0;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;box-shadow:var(--shadow)}
 @media (max-width:760px){#writer{grid-template-columns:1fr}}
-#nextChar{width:76px;height:76px;border-radius:10px;background:var(--pnext-bg);color:var(--paper-ink);border:2px solid #f2a516;display:flex;align-items:center;justify-content:center;font:52px/1 "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif}
+#nextChar{width:76px;height:76px;border-radius:10px;background:var(--pnext-bg);color:var(--paper-ink);border:2px solid #f2a516;display:flex;align-items:center;justify-content:center;font:52px/1 "Barlow Condensed","Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif}
 #penNow{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--ink)}
 .sw{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.25);vertical-align:-2px}
 .penrow{display:grid;grid-template-columns:auto 38px 1fr auto auto;gap:6px;align-items:center;margin:5px 0}
@@ -135,7 +137,7 @@ main{padding:0 16px 16px}
 #nextInfo{font-size:13px;color:var(--muted)}
 #nextInfo b{color:var(--ink);font-variant-numeric:tabular-nums}
 #strip{display:flex;gap:2px;overflow-x:auto;margin-top:6px;padding-bottom:3px;scroll-behavior:smooth}
-#strip span{flex:none;width:22px;height:30px;border-radius:4px;background:var(--paper);color:var(--paper-ink);display:flex;align-items:center;justify-content:center;font:19px "Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif}
+#strip span{flex:none;width:22px;height:30px;border-radius:4px;background:var(--paper);color:var(--paper-ink);display:flex;align-items:center;justify-content:center;font:19px "Barlow Condensed","Bahnschrift Condensed",Bahnschrift,"DIN Condensed","Arial Narrow",Arial,sans-serif}
 #strip span.s{background:transparent;color:var(--g10)}
 #strip span.o{opacity:.18}
 #strip span.d{background:var(--pdone-bg);opacity:.5}
@@ -362,7 +364,7 @@ body.px .penrow .no{font-size:15px;color:var(--ink);width:18px;text-align:center
     <li><b>Schreibfeld 185 × 40 mm:</b> Pro Geräteposition passt nur ein Feld. Die blauen Linien zeigen, wo du das Gerät umsetzen musst. Bei „Feld für Feld“ führt dich die Schreibleiste durch ein Feld nach dem anderen und meldet, wann umgesetzt werden muss.</li>
     <li><b>Monitor-Modus:</b> Laut Anleitung puffert das Gerät bis zu 200 Tastenanschläge. Du kannst eine Zeile also erst ins LCD tippen, prüfen und dann schreiben lassen. Danach in der App <kbd>Strg</kbd>+<kbd>Enter</kbd> drücken = Zeile fertig.</li>
     <li><b>Kleinbuchstaben</b> sind Modus I, Großbuchstaben Modus II. Wer nicht ständig umschalten will, schaltet eine Gruppe im Zeichensatz einfach ab.</li>
-    <li><b>Zeichenabstand:</b> Standard ist <b>Monospace</b> – laut Anleitung ist der Abstand der Buchstabenmitten dann gleich der Schrifthöhe, alle Zeichen stehen in festen Spalten. Das passt am besten zur ASCII-Vorlage. Die Gerätschrift ist eine DIN-ähnliche Engschrift; Vorschau und Tinten-Dichte nutzen deshalb eine Engschrift (Bahnschrift Condensed bzw. Arial Narrow, falls vorhanden).</li>
+    <li><b>Zeichenabstand:</b> Standard ist <b>Monospace</b> – laut Anleitung ist der Abstand der Buchstabenmitten dann gleich der Schrifthöhe, alle Zeichen stehen in festen Spalten. Das passt am besten zur ASCII-Vorlage. Die Gerätschrift ist eine DIN-ähnliche Engschrift; Vorschau und Tinten-Dichte nutzen deshalb die Engschrift „Barlow Condensed“ von Google Fonts (ohne Internet: Bahnschrift Condensed bzw. Arial Narrow).</li>
     <li><b>Helle Stifte auf dunklem Papier:</b> Unter „Papier → Untergrund“ auf „Dunkel – helle Stifte“ stellen und Papier- und Stiftfarbe anpassen. Dann werden helle Bildstellen dicht beschrieben und dunkle bleiben frei. Im Mehrfarbmodus rechnet die App die Mischung mit der echten Papierfarbe; „Farben aus Bild vorschlagen“ setzt den hellen Stift als Stift 1.</li>
     <li><b>Kursiv / Neigung</b> am Gerät auf 90° lassen, sonst passen die Spalten nicht mehr übereinander.</li>
     <li><b>Mehrfarbig:</b> Unter „Farben (Stifte)“ die echten Stiftfarben eintragen. Die Schreibleiste zeigt immer den aktiven Stift und meldet „Stift wechseln“. Mit „Zeigen: nur aktueller Stift“ blendet die Vorlage alle anderen Farben ab – so siehst du nur, was mit dem eingesetzten Stift noch zu tun ist. Beim Stiftwechsel das Gerät nicht verschieben; am besten erst alle Farben eines Felds, dann umsetzen.</li>
@@ -544,7 +546,7 @@ function syncInputs(){
   $('[data-k=pxBlock]').disabled = s.pxOrder!=='field';
 }
 const isPx = () => proj && proj.settings.mode==='pixel';
-const CADFONT = '"Bahnschrift Condensed", Bahnschrift, "DIN Condensed", "Arial Narrow", Arial, sans-serif';
+const CADFONT = '"Barlow Condensed", "Bahnschrift Condensed", Bahnschrift, "DIN Condensed", "Arial Narrow", Arial, sans-serif';
 const paperDark = s => { const p=hexRgb(s.paperColor), k=hexRgb(s.inkColor); return lum(...p) < lum(...k); };
 const curPal = () => isPx() ? proj.yarns : proj.pens;
 const cellMm = s => (FABRICS[s.fabric]&&FABRICS[s.fabric].mm) || s.cellMm || 2;
@@ -1468,6 +1470,11 @@ $('#bDel').onclick=()=>{
 window.addEventListener('beforeunload',()=>saveNow());
 
 /* ================= Start ================= */
+/* Google Font (Barlow Condensed, DIN-ähnliche Engschrift): sobald geladen, Tinten-Dichten neu berechnen.
+   Offline bleibt die Ersatzschrift aktiv. */
+if(document.fonts && document.fonts.load){
+  document.fonts.load('64px "Barlow Condensed"','AWgy0').then(f=>{ if(!f.length||!proj) return; covCache.clear(); buildCharGroups(); recompute(); drawPreview(); }).catch(()=>{});
+}
 (function init(){
   $('#dmcDl').innerHTML=dmcList().map(d=>`<option value="${escH(dmcLabel(d))}">`).join('');
   $('#zoom').value=view.zoom; $('#showDots').checked=view.dots;
